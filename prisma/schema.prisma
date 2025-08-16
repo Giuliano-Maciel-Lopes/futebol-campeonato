@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(CAPITAO)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Cada usuário pode ser capitão de no máximo 1 time
+  captainOf Team?
+}
+
+model Team {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  imageUrl     String?
+  totalPlayers Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+
+  // Capitão do time (obrigatório, um-para-um)
+  captain   User @relation(fields: [captainId], references: [id])
+  captainId Int  @unique
+
+  // Jogadores do time
+  players Player[]
+}
+
+model Player {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  position   String?
+  number     Int      @unique
+  identidade String // Número de identidade oficial do jogador
+  photoUrl   String? // Foto opcional
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  // Relação com Team
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String @db.Uuid
+}
+
+enum Role {
+  CAPITAO
+  ADMIN
+}
