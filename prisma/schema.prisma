@@ -8,9 +8,8 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
-  
   name      String
   password  String
   role      Role     @default(CAPITAO)
@@ -27,11 +26,11 @@ model Team {
   imageUrl     String?
   totalPlayers Int      @default(0)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Capitão do time (obrigatório, um-para-um)
-  captain   User @relation(fields: [captainId], references: [id])
-  captainId Int  @unique
+  captain   User   @relation(fields: [captainId], references: [id])
+  captainId String @unique @db.Uuid
 
   // Jogadores do time
   players Player[]
@@ -42,10 +41,10 @@ model Player {
   name       String
   position   String?
   number     Int      @unique
-  identidade String // Número de identidade oficial do jogador
-  photoUrl   String? // Foto opcional
+  identidade String   // Número de identidade oficial do jogador
+  photoUrl   String?  // Foto opcional
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relação com Team
   team   Team   @relation(fields: [teamId], references: [id])
