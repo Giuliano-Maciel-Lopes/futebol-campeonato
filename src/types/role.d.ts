@@ -1,0 +1,4 @@
+type Role = {
+  "CAPITAO", 
+  "ADMIN"
+};
