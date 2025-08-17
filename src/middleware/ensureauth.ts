@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { authConfig } from "@/config/auth.js";
 import { AppError } from "@/utils/AppEroor";
+import { Role } from "@prisma/client";
 
 interface TokenPayload {
   role: Role;

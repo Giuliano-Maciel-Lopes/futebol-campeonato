@@ -12,21 +12,23 @@ model User {
   email     String   @unique
   name      String
   password  String
-  role      Role     @default(CAPITAO)
+  role      Role     @default(JOGADOR)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Cada usuário pode ser capitão de no máximo 1 time
   captainOf Team?
+
+  // Cada usuário pode ter no máximo 1 cartinha
+  player Player?
 }
 
 model Team {
-  id           String   @id @default(uuid()) @db.Uuid
-  name         String
-  imageUrl     String?
-  totalPlayers Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Capitão do time (obrigatório, um-para-um)
   captain   User   @relation(fields: [captainId], references: [id])
@@ -37,21 +39,36 @@ model Team {
 }
 
 model Player {
-  id         String   @id @default(uuid()) @db.Uuid
-  name       String
-  position   String?
-  number     Int      @unique
-  identidade String   // Número de identidade oficial do jogador
-  photoUrl   String?  // Foto opcional
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  nameCart    String   @unique
+  id          String   @id @default(uuid()) @db.Uuid
+  position    Position
+  number      Int      
+  photoUrl    String?  // Foto opcional
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String   @unique @db.Uuid
+
+  goals       Int      @default(0)
+  assists     Int      @default(0)
+
+  // Relação com o usuário (1 usuário → 1 cartinha)
+  user        User     @relation(fields: [userId], references: [id])
 
   // Relação com Team
-  team   Team   @relation(fields: [teamId], references: [id])
-  teamId String @db.Uuid
+  team        Team?    @relation(fields: [teamId], references: [id])
+  teamId      String?  @db.Uuid
 }
+
 
 enum Role {
   CAPITAO
   ADMIN
+  JOGADOR
+}
+
+enum Position {
+  GOLEIRO
+  DEFENSOR
+  MEIOCAMPO
+  ATACANTE
 }

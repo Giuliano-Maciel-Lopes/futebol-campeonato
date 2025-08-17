@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { AppError } from "@/utils/AppEroor"
+import { Role } from "@prisma/client"
+
 
 
 function verifyUserAuthorization(role: Role[]) {

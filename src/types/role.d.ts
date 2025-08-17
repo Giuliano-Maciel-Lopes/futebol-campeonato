@@ -1,4 +1,4 @@
-type Role = {
+export type Role = {
   "CAPITAO", 
   "ADMIN"
 };
