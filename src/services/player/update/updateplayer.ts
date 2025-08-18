@@ -6,17 +6,21 @@ import { Role, User } from "@prisma/client";
 type UpdateProps = {
   data: updatePlayerInput;
   id: string;
-  userId:string ;
-  role:Role
+  userId: string;
+  role: Role;
 };
-export async function updatePlayer({ data, id, userId , role}: UpdateProps) {
-  if (!userId) throw new AppError("ID do usuário é obrigatório para atualizar o jogador");
-  
-  if (!id) throw new AppError("ID do jogador é obrigatório para atualizar o jogador");
+export async function updatePlayer({ data, id, userId, role }: UpdateProps) {
+  const playerExists = await prisma.player.findUnique({ where: { id } });
+  if (!playerExists) {
+    throw new AppError("Player não existe", 404);
+  }
 
-const where = role==="ADMIN" ? {id}: {id , userId}
+  if (role !== "ADMIN" && playerExists.userId !== userId) {
+    throw new AppError("Não autorizado a atualizar esse jogador", 403);
+  }
+
   const updatedDataIDplayer = await prisma.player.update({
-    where,
+    where: { id },
     data,
   });
   return { updatedDataIDplayer };
