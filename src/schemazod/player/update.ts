@@ -7,7 +7,9 @@ export const PlayerBodySchemaupdate = z.object({
     "escolha uma opçao"
   ).optional(),
   number: z.number().int().positive("O número deve ser positivo").optional(),
-  photoUrl: z.string().url().optional(),
+  photoUrl: z.string().optional(),
+  role: z.enum(["JOGADOR", "CAPITAO"]).optional(),
+  
 });
 
 export type updatePlayerInput = z.infer<typeof PlayerBodySchemaupdate>;

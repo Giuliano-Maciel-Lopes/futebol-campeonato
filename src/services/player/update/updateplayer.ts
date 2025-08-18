@@ -1,7 +1,7 @@
 import { prisma } from "@/database/prisma-config";
 import { updatePlayerInput } from "@/schemazod/player/update";
 import { AppError } from "@/utils/AppEroor";
-import { Role, User } from "@prisma/client";
+import { Role, } from "@prisma/client";
 
 type UpdateProps = {
   data: updatePlayerInput;

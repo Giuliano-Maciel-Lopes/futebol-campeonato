@@ -33,8 +33,9 @@ model Team {
   updatedAt DateTime @updatedAt
 
   // Capitão do time
-  captain   Player @relation("TeamCaptain", fields: [captainId], references: [id])
   captainId String @unique @db.Uuid
+  captain   Player @relation("TeamCaptain", fields: [captainId], references: [id])
+  
 
   // Jogadores do time
   players   Player[] @relation("TeamPlayers")
