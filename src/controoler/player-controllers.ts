@@ -5,6 +5,7 @@ import {
   showPlayerId,
   listplayer,
   updatePlayer,
+  deletePlayer
 } from "@/services/player";
 import { uuidSchema } from "@/schemazod/uuid";
 import { PlayerBodySchemaupdate } from "@/schemazod/player/update";
@@ -44,6 +45,8 @@ class PlayerController {
   }
 
   async delete(req: Request, res: Response) {
+    const id = uuidSchema.parse(req.params.id);
+    await deletePlayer({id})
     res.json({ message: "Remover jogador (exemplo)" });
   }
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { PlayerController } from "@/controoler/player-controllers";
-import { ensureAuth } from "@/middleware";
+import { ensureAuth, verifyUserAuthorization } from "@/middleware";
 
 const playerRoutes = Router();
 
@@ -12,6 +12,8 @@ playerRoutes.use(ensureAuth);
 
 playerRoutes.post("/", playerController.create);
 playerRoutes.patch("/:id", playerController.update);
+playerRoutes.delete("/:id", verifyUserAuthorization(["ADMIN"]) ,  playerController.delete);
+
 
 
 

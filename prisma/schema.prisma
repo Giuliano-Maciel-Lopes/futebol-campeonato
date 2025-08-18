@@ -39,26 +39,25 @@ model Team {
 }
 
 model Player {
-  nameCart    String   @unique
-  id          String   @id @default(uuid()) @db.Uuid
-  position    Position
-  number      Int      
-  photoUrl    String?  // Foto opcional
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      String   @unique @db.Uuid
+  nameCart  String   @unique
+  id        String   @id @default(uuid()) @db.Uuid
+  position  Position
+  number    Int
+  photoUrl  String? // Foto opcional
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String   @unique @db.Uuid
 
-  goals       Int      @default(0)
-  assists     Int      @default(0)
+  goals   Int @default(0)
+  assists Int @default(0)
 
   // Relação com o usuário (1 usuário → 1 cartinha)
-  user        User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   // Relação com Team
-  team        Team?    @relation(fields: [teamId], references: [id])
-  teamId      String?  @db.Uuid
+  team   Team?   @relation(fields: [teamId], references: [id])
+  teamId String? @db.Uuid
 }
-
 
 enum Role {
   CAPITAO
