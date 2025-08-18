@@ -18,7 +18,6 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Cada usuário pode ser capitão de no máximo 1 time
-  captainOf Team?
 
   // Cada usuário pode ter no máximo 1 cartinha
   player Player?
@@ -33,50 +32,52 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  captain   User   @relation(fields: [captainId], references: [id])
+  // Capitão do time
+  captain   Player @relation("TeamCaptain", fields: [captainId], references: [id])
   captainId String @unique @db.Uuid
 
   // Jogadores do time
-  players Player[]
+  players   Player[] @relation("TeamPlayers")
 
-  // Relacionamento com grupos
   groupId String? @db.Uuid
   group   Group?  @relation(fields: [groupId], references: [id])
 
-  // Relacionamento com partidas
   team1Matches Match[] @relation("Team1Matches")
   team2Matches Match[] @relation("Team2Matches")
 }
 
 // --------------------------------------
 model Player {
-  id        String   @id @default(uuid()) @db.Uuid
-  nameCart  String   @unique
+  id        String     @id @default(uuid()) @db.Uuid
+  nameCart  String     @unique
   position  Position
   number    Int
   photoUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String   @unique @db.Uuid
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  userId    String     @unique @db.Uuid
+  role      PlayerRole @default(JOGADOR)
 
   goals   Int @default(0)
   assists Int @default(0)
 
-  // Relação com o usuário
   user User @relation(fields: [userId], references: [id])
 
-  // Relação com Team
-  team   Team?   @relation(fields: [teamId], references: [id])
+  // Relação com Team como jogador
+  team   Team? @relation("TeamPlayers", fields: [teamId], references: [id])
   teamId String? @db.Uuid
 
-  // Eventos de partidas (gol/assistência)
+  // Relação com Team como capitão
+  captainOf Team? @relation("TeamCaptain")
+
   events MatchEvent[]
 }
+
 
 //  --------------------------------------
 model Group {
   id        String   @id @default(uuid()) @db.Uuid
-  name      String   // Ex: "Grupo A"
+  name      String // Ex: "Grupo A"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -85,10 +86,10 @@ model Group {
 
 // ---------------------------------------
 model Match {
-  id        String   @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
-  stage    Stage   // Fase do campeonato: GROUP, QUARTAS, SEMI, FINAL
-  round    Int?    // Rodada opcional
+  stage Stage // Fase do campeonato: GROUP, QUARTAS, SEMI, FINAL
+  round Int? // Rodada opcional
 
   team1Id String @db.Uuid
   team2Id String @db.Uuid
@@ -107,11 +108,11 @@ model Match {
 
 // -------------------------------------
 model MatchEvent {
-  id        String   @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
-  matchId   String   @db.Uuid
-  playerId  String   @db.Uuid
-  type      EventType
+  matchId  String    @db.Uuid
+  playerId String    @db.Uuid
+  type     EventType
 
   match  Match  @relation(fields: [matchId], references: [id])
   player Player @relation(fields: [playerId], references: [id])
@@ -119,7 +120,6 @@ model MatchEvent {
 
 // --------------------------------------
 enum Role {
-  CAPITAO
   ADMIN
   JOGADOR
 }
@@ -141,4 +141,9 @@ enum Stage {
 enum EventType {
   GOAL
   ASSIST
+}
+
+enum PlayerRole {
+  JOGADOR
+  CAPITAO
 }
