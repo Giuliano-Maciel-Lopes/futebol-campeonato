@@ -1,14 +1,18 @@
 import { Router } from "express";
 import { PlayerController } from "@/controoler/player-controllers";
+import { ensureAuth } from "@/middleware";
 
 const playerRoutes = Router();
 
 const playerController = new PlayerController();
+playerRoutes.get("/:id", playerController.showID);
+playerRoutes.get("/", playerController.list);
+
+playerRoutes.use(ensureAuth);
 
 playerRoutes.post("/", playerController.create);
-playerRoutes.get("/:id", playerController.get);
-playerRoutes.get("/", playerController.list);
-playerRoutes.put("/:id", playerController.update);
-playerRoutes.delete("/:id", playerController.delete);
 
-export { playerRoutes}
+
+
+
+export { playerRoutes };

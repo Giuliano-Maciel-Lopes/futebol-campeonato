@@ -1,27 +1,32 @@
 import { Request, Response } from "express";
 import { PlayerBodySchema } from "@/schemazod/player/create";
-import { createPlayer } from "@/services/player";
+import { createPlayer, showPlayerId ,listplayer } from "@/services/player";
+import { uuidSchema } from "@/schemazod/uuid";
+
 
 class PlayerController {
   async create(req: Request, res: Response) {
-    const userId = req.user!.id; // protegido no index routes
+    const userId = req.user!.id; // protegido na rota 
 
     const data = PlayerBodySchema.parse(req.body);
     const { dataCart } = await createPlayer({ data, userId });
 
-    res.json(dataCart);
+    res.status(200).json(dataCart);
+  }
+    async list(req: Request, res: Response) {
+   const {playersfull} =  await listplayer()
+   res.status(200).json(playersfull)
   }
 
-  async get(req: Request, res: Response) {
-    res.json({ message: "Buscar jogador (exemplo)" });
-  }
+  async showID(req: Request, res: Response) {
+    const id = uuidSchema.parse(req.params.id);
+    const {playerCardId } = await showPlayerId(id);
 
-  async list(req: Request, res: Response) {
-    res.json({ message: "Listar jogadores (exemplo)" });
+    res.json( playerCardId );
   }
-
+  
   async update(req: Request, res: Response) {
-    res.json({ message: "Atualizar jogador (exemplo)" });
+   
   }
 
   async delete(req: Request, res: Response) {

@@ -8,13 +8,21 @@ type createPlayerInput = {
 };
 
 export async function createPlayer({ data, userId }: createPlayerInput) {
-  const existingName = await prisma.player.findFirst({
-    where: { nameCart: data.nameCart },
+  const existing = await prisma.player.findFirst({
+    where: {
+      OR: [{ nameCart: data.nameCart }, { userId: userId }],
+    },
   });
 
-  if (existingName) {
-    throw new AppError("ja existe um usario com esse nome");
+  if (existing) {
+    if (existing.nameCart === data.nameCart) {
+      throw new AppError("Já existe um usuário com esse nome");
+    }
+    if (existing.userId === userId) {
+      throw new AppError("voce já possui uma cartinha ");
+    }
   }
+
   const dataCart = await prisma.player.create({ data: { ...data, userId } });
 
   return { dataCart };

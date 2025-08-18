@@ -8,8 +8,9 @@ const routes = Router();
 
 routes.use("/session", sessionRoutes); 
 routes.use("/users", userRoutes);
+routes.use("/players", playerRoutes);
 
 routes.use(ensureAuth);
-routes.use("/players", playerRoutes);
+
 
 export { routes };
