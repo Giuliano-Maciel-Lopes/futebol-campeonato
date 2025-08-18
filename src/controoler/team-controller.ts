@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { createTeam } from "@/services/team";
+import { createTeam, listTeam ,deleteTeam , showTeamId , updateTeam} from "@/services/team";
 import { TeamBodySchema } from "@/schemazod/team/create";
+import { uuidSchema } from "@/schemazod/uuid";
 
 class TeamController {
   async create(req: Request, res: Response) {
@@ -19,13 +20,17 @@ class TeamController {
   }
 
   async list(req: Request, res: Response) {
-    res.status(200).json({});
+    const { fullTeam } = await listTeam();
+    res.json(fullTeam);
   }
   async showID(req: Request, res: Response) {
-    res.json({});
+    const id = uuidSchema.parse(req.params.id)
+  const {teamId}=  await showTeamId(id)
+  res.json(teamId)
   }
+
   async update(req: Request, res: Response) {
-    res.json({});
+    res.json();
   }
   async delete(req: Request, res: Response) {
     res.json({});

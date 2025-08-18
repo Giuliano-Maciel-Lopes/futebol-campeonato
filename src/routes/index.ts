@@ -10,9 +10,10 @@ const routes = Router();
 routes.use("/session", sessionRoutes); 
 routes.use("/users", userRoutes);
 routes.use("/players", playerRoutes);
+routes.use("/teams", teamRoutes)
 
 routes.use(ensureAuth);
-routes.use("/teams", teamRoutes )
+
 
 
 export { routes };
