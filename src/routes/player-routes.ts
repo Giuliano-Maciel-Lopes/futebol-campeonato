@@ -11,6 +11,7 @@ playerRoutes.get("/", playerController.list);
 playerRoutes.use(ensureAuth);
 
 playerRoutes.post("/", playerController.create);
+playerRoutes.patch("/:id", playerController.update);
 
 
 

@@ -1,1 +1,1 @@
-import * from "./updateplayer"
+export * from "./updateplayer"
