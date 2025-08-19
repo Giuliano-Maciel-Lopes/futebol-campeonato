@@ -17,7 +17,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Cada usuário pode ser capitão de no máximo 1 time
+  
 
   // Cada usuário pode ter no máximo 1 cartinha
   player          Player?
