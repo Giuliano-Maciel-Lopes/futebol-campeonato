@@ -1,15 +1,12 @@
 import { prisma } from "@/database/prisma-config";
-import { AppError } from "@/utils/AppEroor";
-import { Role } from "@prisma/client";
+import { findPlayerById } from "@/utils/prismaHelpersutils";
 
 interface DeletePlayerProps {
   id: string;
- 
 }
 
-export async function deletePlayer({ id, }: DeletePlayerProps) {
-    // so adm pode apagar a cartinha 
-    // midalawares de autenticated e verifiauthorizathion
-    await prisma.player.delete({where:{id}})
- 
+export async function deletePlayer({ id }: DeletePlayerProps) {
+  await findPlayerById(id);
+
+  await prisma.player.delete({ where: { id } });
 }

@@ -6,15 +6,15 @@ export async function findUserById(id: string) {
   if (!user) {
     throw new AppError("Usuário não encontrado.", 404);
   }
-  return user;
+  return {user};
 }
 
 export async function findPlayerById(id: string) {
   const player = await prisma.player.findUnique({ where: { id } });
   if (!player) {
-    throw new AppError("Jogador não encontrado.", 404);
+    throw new AppError("player não encontrado.", 404);
   }
-  return player;
+  return {player};
 }
 
 export async function findTeamById(id: string) {
@@ -22,7 +22,7 @@ export async function findTeamById(id: string) {
   if (!team) {
     throw new AppError("Time não encontrado.", 404);
   }
-  return team;
+  return {team};
 }
 
 export async function findInviteById(id: string) {
@@ -30,5 +30,5 @@ export async function findInviteById(id: string) {
   if (!invite) {
     throw new AppError("Convite não encontrado.", 404);
   }
-  return invite;
+  return {invite};
 }
