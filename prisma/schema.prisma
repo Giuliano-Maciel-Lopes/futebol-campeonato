@@ -20,7 +20,10 @@ model User {
   // Cada usuário pode ser capitão de no máximo 1 time
 
   // Cada usuário pode ter no máximo 1 cartinha
-  player Player?
+  player          Player?
+  // Convites enviados e recebidos
+  sentInvites     Invite[] @relation("SentInvites")
+  receivedInvites Invite[] @relation("ReceivedInvites")
 }
 
 // --------------------------------------
@@ -31,20 +34,22 @@ model Team {
   imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
 
   // Capitão do time
   captainId String @unique @db.Uuid
   captain   Player @relation("TeamCaptain", fields: [captainId], references: [id])
-  
 
   // Jogadores do time
-  players   Player[] @relation("TeamPlayers")
+  players Player[] @relation("TeamPlayers")
 
   groupId String? @db.Uuid
   group   Group?  @relation(fields: [groupId], references: [id])
 
   team1Matches Match[] @relation("Team1Matches")
   team2Matches Match[] @relation("Team2Matches")
+
+  invites Invite[] @relation("TeamInvites")
 }
 
 // --------------------------------------
@@ -54,6 +59,7 @@ model Player {
   position  Position
   number    Int
   photoUrl  String?
+  isActive  Boolean    @default(true)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   userId    String     @unique @db.Uuid
@@ -65,7 +71,7 @@ model Player {
   user User @relation(fields: [userId], references: [id])
 
   // Relação com Team como jogador
-  team   Team? @relation("TeamPlayers", fields: [teamId], references: [id])
+  team   Team?   @relation("TeamPlayers", fields: [teamId], references: [id])
   teamId String? @db.Uuid
 
   // Relação com Team como capitão
@@ -73,7 +79,6 @@ model Player {
 
   events MatchEvent[]
 }
-
 
 //  --------------------------------------
 model Group {
@@ -120,6 +125,34 @@ model MatchEvent {
 }
 
 // --------------------------------------
+model Invite {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Quem enviou o convite 
+  senderId String @db.Uuid
+  sender   User   @relation("SentInvites", fields: [senderId], references: [id])
+
+  // Quem vai receber 
+  receiverId String @db.Uuid
+  receiver   User   @relation("ReceivedInvites", fields: [receiverId], references: [id])
+
+  // Para qual time é o convite
+  teamId String @db.Uuid
+  team   Team   @relation("TeamInvites", fields: [teamId], references: [id])
+
+  // Status do pedido
+  status InviteStatus @default(PENDING)
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
+
 enum Role {
   ADMIN
   JOGADOR
