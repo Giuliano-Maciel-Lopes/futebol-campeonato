@@ -9,6 +9,7 @@ import {
 import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
 import { TeamUpdateSchema } from "@/schemazod/team/update";
+import { uuid } from "zod";
 
 class TeamController {
   async create(req: Request, res: Response) {
@@ -17,32 +18,37 @@ class TeamController {
       data,
     });
 
-    res.json(TeamCreate);
+    res.status(200).json(TeamCreate);
   }
 
   async list(req: Request, res: Response) {
     const { fullTeam } = await listTeam();
-    res.json(fullTeam);
+    res.status(200).json(fullTeam);
   }
   async showID(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
     const { teamId } = await showTeamId(id);
-    res.json(teamId);
+    res.status(200).json(teamId);
   }
 
   async update(req: Request, res: Response) {
-   const role =   req.user!.role // protegido pro midllaware
-   const userId = req.user!.id // protegido pro midllaware
+    const role = req.user!.role; // protegido pro midllaware
+    const userId = req.user!.id; // protegido pro midllaware
 
-    const id = uuidSchema.parse(req.params.id)
-    const data =TeamUpdateSchema.parse(req.body)
+    const id = uuidSchema.parse(req.params.id);
+    const data = TeamUpdateSchema.parse(req.body);
 
-   const {dataUpdate} =  await updateTeam({data,id ,role ,userId})
-   
+    const { dataUpdate } = await updateTeam({ data, id, role, userId });
+
     res.json(dataUpdate);
   }
   async delete(req: Request, res: Response) {
-    res.json({});
+    const role = req.user!.role; // protegido pro midllaware
+    const id = uuidSchema.parse(req.params.id);
+
+    const { teamDelete } = await deleteTeam({ id });
+
+    res.status(200).json(teamDelete);
   }
 }
 

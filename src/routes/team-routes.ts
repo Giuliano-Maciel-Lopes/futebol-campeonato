@@ -13,6 +13,6 @@ teamRoutes.use(ensureAuth)
 
 teamRoutes.post("/", verifyUserAuthorization(["ADMIN"]) ,  teamController.create);
 teamRoutes.patch("/:id", teamController.update);
-teamRoutes.delete("/:id", teamController.delete);
+teamRoutes.delete("/:id", verifyUserAuthorization(["ADMIN"]) ,  teamController.delete);
 
 export { teamRoutes };

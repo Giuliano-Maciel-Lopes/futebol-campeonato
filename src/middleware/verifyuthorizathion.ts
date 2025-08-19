@@ -9,6 +9,8 @@ function verifyUserAuthorization(role: Role[]) {
     if(!req.user){
         throw new AppError("ops Não autorizado!!")
     }
+    console.log("Role do usuário em verifyUserAuthorization:", req.user.role);
+    console.log("Roles permitidas:", role);
     if(!role.includes(req.user.role)){
         throw new AppError("ops Não autorizado!!")
 
