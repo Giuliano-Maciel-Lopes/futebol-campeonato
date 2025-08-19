@@ -1,0 +1,34 @@
+import { prisma } from "@/database/prisma-config";
+import { AppError } from "./AppEroor";
+
+export async function findUserById(id: string) {
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) {
+    throw new AppError("Usuário não encontrado.", 404);
+  }
+  return user;
+}
+
+export async function findPlayerById(id: string) {
+  const player = await prisma.player.findUnique({ where: { id } });
+  if (!player) {
+    throw new AppError("Jogador não encontrado.", 404);
+  }
+  return player;
+}
+
+export async function findTeamById(id: string) {
+  const team = await prisma.team.findUnique({ where: { id } });
+  if (!team) {
+    throw new AppError("Time não encontrado.", 404);
+  }
+  return team;
+}
+
+export async function findInviteById(id: string) {
+  const invite = await prisma.invite.findUnique({ where: { id } });
+  if (!invite) {
+    throw new AppError("Convite não encontrado.", 404);
+  }
+  return invite;
+}
