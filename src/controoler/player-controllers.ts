@@ -5,10 +5,12 @@ import {
   showPlayerId,
   listplayer,
   updatePlayer,
-  deletePlayer
+  deletePlayer,
+  IsactivePlayerUpdate
 } from "@/services/player";
 import { uuidSchema } from "@/schemazod/uuid";
 import { PlayerBodySchemaupdate } from "@/schemazod/player/update";
+import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
 
 class PlayerController {
   async create(req: Request, res: Response) {
@@ -32,22 +34,35 @@ class PlayerController {
   }
 
   async update(req: Request, res: Response) {
-   
-    const role = req.user!.role
-    const userId = req.user!.id; 
-     // protegido pro middlaware
-     
+    const role = req.user!.role;
+    const userId = req.user!.id;
+    // protegido pro middlaware
+
     const data = PlayerBodySchemaupdate.parse(req.body);
     const id = uuidSchema.parse(req.params.id);
-    const { updatedDataIDplayer } = await updatePlayer({ data, id ,role , userId });
+    const { updatedDataIDplayer } = await updatePlayer({
+      data,
+      id,
+      role,
+      userId,
+    });
 
     res.status(200).json(updatedDataIDplayer);
   }
 
   async delete(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
-    await deletePlayer({id})
+    await deletePlayer({ id });
     res.json({ message: "Remover jogador (exemplo)" });
+  }
+  async isActiveUpdate(req: Request, res: Response) {
+    const id = uuidSchema.parse(req.params.id);
+    const {isActive} = schemazBOdyIsactiveUpdate.parse(req.body);
+
+    const {playerIsActive } = await IsactivePlayerUpdate({ id, isActive });
+
+    res.json(playerIsActive);
+
   }
 }
 

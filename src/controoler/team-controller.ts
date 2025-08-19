@@ -5,11 +5,13 @@ import {
   deleteTeam,
   showTeamId,
   updateTeam,
+IsactiveTeamUpdate
 } from "@/services/team";
 import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
 import { TeamUpdateSchema } from "@/schemazod/team/update";
-import { uuid } from "zod";
+import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
+
 
 class TeamController {
   async create(req: Request, res: Response) {
@@ -50,6 +52,14 @@ class TeamController {
 
     res.status(200).json(teamDelete);
   }
+   async isActiveUpdate(req: Request, res: Response) {
+    const id = uuidSchema.parse(req.params.id);
+    const {isActive} = schemazBOdyIsactiveUpdate.parse(req.body);
+
+  const {teamIsActive} =   await IsactiveTeamUpdate({id , isActive})
+
+  res.status(200).json(teamIsActive);
+   }
 }
 
 export { TeamController };
