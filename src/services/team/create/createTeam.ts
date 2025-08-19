@@ -4,17 +4,11 @@ import { updatePlayer } from "@/services/player";
 import { AppError } from "@/utils/AppEroor";
 import { PlayerRole, Role } from "@prisma/client";
 
-
-
-
 interface CreateTeamRequest {
   data: TeamBodySchemaInput;
-  rolePlayer:PlayerRole
-  role: Role;
-  userId: string;
 }
 
-export async function createTeam({ data ,rolePlayer ,role ,userId}: CreateTeamRequest) {
+export async function createTeam({ data }: CreateTeamRequest) {
   const verifiCaptain = await prisma.team.findFirst({
     where: { captainId: data.captainId },
   });
@@ -24,7 +18,10 @@ export async function createTeam({ data ,rolePlayer ,role ,userId}: CreateTeamRe
 
   const TeamCreate = await prisma.team.create({ data });
 
-  await  updatePlayer({data:{role:rolePlayer} , id:data.captainId, role , userId})
-      
+  await prisma.player.update({
+    where: { id: data.captainId },
+    data: { teamId: TeamCreate.id, role: "CAPITAO" },
+  });
+
   return { TeamCreate };
 }
