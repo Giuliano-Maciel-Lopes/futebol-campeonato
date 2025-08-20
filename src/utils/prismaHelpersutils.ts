@@ -32,6 +32,13 @@ export async function findInviteById(id: string) {
   }
   return {invite};
 }
+export async function findMatchById(id: string) {
+  const match = await prisma.match.findUnique({ where: { id } });
+  if (!match) {
+    throw new AppError("partida não encontrado.", 404);
+  }
+  return {match};
+}
 
 export async function findPlayerByUserId(userId: string) {
   const player = await prisma.player.findUnique({ where: { userId } });
