@@ -1,12 +1,16 @@
-interface IDeleteInviteRequest {
+import { prisma } from "@/database/prisma-config";
+import { findInviteById } from "@/utils/prismaHelpersutils";
+
+type DeleteProps = {
   id: string;
 }
 
-interface IDeleteInviteResponse {
-  invite: any;
-}
 
-export async function deleteInvite({ id }: IDeleteInviteRequest) {
-  // Lógica será adicionada depois por você
-  return { invite: {} };
+
+export async function deleteInvite({ id }: DeleteProps) {
+ await  findInviteById(id)
+
+ const InviteDelete = await prisma.invite.delete({where:{id}})
+
+  return {InviteDelete};
 }

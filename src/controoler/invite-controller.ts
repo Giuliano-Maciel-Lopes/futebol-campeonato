@@ -40,8 +40,9 @@ class InviteController {
 
   async delete(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
-    // const { invite } = await deleteInvite({ id });
-    res.status(200).json({});
+     const { InviteDelete } = await deleteInvite({ id });
+    res.status(200).json(InviteDelete);
+
   }
 }
 
