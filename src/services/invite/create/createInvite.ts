@@ -1,6 +1,13 @@
 import { prisma } from "@/database/prisma-config";
 import { InviteBodyInput } from "@/schemazod/invite/create";
 import { AppError } from "@/utils/AppEroor";
+import {
+  findUserById,
+
+  findTeamById,
+  findPlayerById,
+} from "@/utils/prismaHelpersutils";
+
 
 interface ICreateInviteRequest {
   data: InviteBodyInput;
@@ -8,21 +15,9 @@ interface ICreateInviteRequest {
 }
 
 export async function createInvite({ data, userId }: ICreateInviteRequest) {
-  // a unica pessoa que pode criar um convite é o capitao do time
-
-  const team = await prisma.team.findFirst({ where: { id: data.teamId } });
-  if (!team) {
-    throw new AppError("nao existe time com esse id", 404);
-  }
-
-  const user = await prisma.user.findUnique({
-  where: { id: data.receiverId },
-});
-
-if (!user) {
-  throw new AppError("Usuário que vai receber o convite não existe", 404);
-}
-
+  // a unica pessoa que pode criar um convite é o capitao do time 
+    await findTeamById(data.teamId);
+    await findPlayerById(data.receiverId);
 
   const player = await prisma.player.findFirst({
     where: { userId },
@@ -30,16 +25,15 @@ if (!user) {
   });
 
   if (!player) {
-    throw new AppError("nao existe player com esse id", 404);
+    throw new AppError("esse jogador nao tem uma cartinha", 404); // ou seja n e capiato nem player 
   }
-  
 
-  if (!player.captainOf || player.captainOf.id !== data.teamId) {
+  if (!player.captainOf || player.captainOf.id !== data.teamId) { // capitao do time / e não so capitao  
     throw new AppError("Apenas o capitão deste time pode criar convites", 403);
   }
 
   const invitecreate = await prisma.invite.create({
-    data: { senderId: userId, ...data },
+    data: { senderId: player.id, ...data },
   });
 
   return { invitecreate };

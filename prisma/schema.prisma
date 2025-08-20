@@ -22,8 +22,7 @@ model User {
   // Cada usuário pode ter no máximo 1 cartinha
   player          Player?
   // Convites enviados e recebidos
-  sentInvites     Invite[] @relation("SentInvites")
-  receivedInvites Invite[] @relation("ReceivedInvites")
+
 }
 
 // --------------------------------------
@@ -78,6 +77,9 @@ model Player {
   captainOf Team? @relation("TeamCaptain")
 
   events MatchEvent[]
+
+  sentInvites     Invite[] @relation("SentInvites")
+  receivedInvites Invite[] @relation("ReceivedInvites")
 }
 
 //  --------------------------------------
@@ -132,11 +134,11 @@ model Invite {
 
   // Quem enviou o convite 
   senderId String @db.Uuid
-  sender   User   @relation("SentInvites", fields: [senderId], references: [id])
+  sender  Player    @relation("SentInvites", fields: [senderId], references: [id])
 
   // Quem vai receber 
-  receiverId String @db.Uuid
-  receiver   User   @relation("ReceivedInvites", fields: [receiverId], references: [id])
+receiverId String @db.Uuid
+receiver   Player @relation("ReceivedInvites", fields: [receiverId], references: [id])
 
   // Para qual time é o convite
   teamId String @db.Uuid

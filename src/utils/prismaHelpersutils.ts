@@ -18,7 +18,7 @@ export async function findPlayerById(id: string) {
 }
 
 export async function findTeamById(id: string) {
-  const team = await prisma.team.findUnique({ where: { id } });
+  const team = await prisma.team.findUnique({ where: { id } , include:{players:true} });
   if (!team) {
     throw new AppError("Time não encontrado.", 404);
   }
@@ -31,4 +31,10 @@ export async function findInviteById(id: string) {
     throw new AppError("Convite não encontrado.", 404);
   }
   return {invite};
+}
+
+export async function findPlayerByUserId(userId: string) {
+  const player = await prisma.player.findUnique({ where: { userId } });
+  if (!player) throw new AppError("Player não encontrado.", 404);
+  return { player };
 }

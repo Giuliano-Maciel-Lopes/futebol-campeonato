@@ -9,7 +9,6 @@ const inviteController = new InviteController();
 
 inviteRoutes.post("/", inviteController.create);
 inviteRoutes.get("/", inviteController.list);
-inviteRoutes.get("/:id", inviteController.showID);
 inviteRoutes.patch("/:id", inviteController.update);
 inviteRoutes.delete("/:id", inviteController.delete);
 

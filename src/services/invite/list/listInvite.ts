@@ -1,8 +1,16 @@
-interface IListInviteResponse {
- 
-}
+import { prisma } from "@/database/prisma-config";
+import { findPlayerByUserId } from "@/utils/prismaHelpersutils";
 
-export async function listInvite(){
-  
-  return { invites: [] };
+type listProps = {
+  userId: string;
+};
+
+export async function listInvite({ userId }: listProps) {
+ const {player} = await  findPlayerByUserId(userId)
+
+  const invite = await prisma.invite.findMany({
+    where: { OR: [{ receiverId: player.id }, { senderId: player.id }] },
+  });
+
+  return { invite };
 }
