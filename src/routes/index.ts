@@ -6,6 +6,7 @@ import { playerRoutes } from "./player-routes";
 import { inviteRoutes } from "./invite-routes";
 import { teamRoutes } from "./team-routes";
 import { matchRoutes } from "./match-routes";
+import { matchEventRoutes } from "./matche-event-routes";
 
 const routes = Router();
 
@@ -16,8 +17,10 @@ routes.use("/players", playerRoutes);
 routes.use("/match" , matchRoutes)
 
 
+
 routes.use(ensureAuth);
 routes.use("/invites", inviteRoutes);
+routes.use("/match_event" , matchEventRoutes)
 
 
 

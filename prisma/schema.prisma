@@ -17,12 +17,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  
-
   // Cada usuário pode ter no máximo 1 cartinha
-  player          Player?
+  player Player?
   // Convites enviados e recebidos
-
 }
 
 // --------------------------------------
@@ -49,6 +46,7 @@ model Team {
   team2Matches Match[] @relation("Team2Matches")
 
   invites Invite[] @relation("TeamInvites")
+  matchEvents MatchEvent[]
 }
 
 // --------------------------------------
@@ -97,7 +95,7 @@ model Match {
   id String @id @default(uuid()) @db.Uuid
 
   stage Stage // Fase do campeonato: GROUP, , SEMI, FINAL
-   round Int    @default(autoincrement()) 
+  round Int   @default(autoincrement())
 
   team1Id String @db.Uuid
   team2Id String @db.Uuid
@@ -119,11 +117,15 @@ model MatchEvent {
   id String @id @default(uuid()) @db.Uuid
 
   matchId  String    @db.Uuid
-  playerId String    @db.Uuid
+  playerId String?   @db.Uuid
+  teamId   String    @db.Uuid   // Time que marcou o gol
   type     EventType
 
-  match  Match  @relation(fields: [matchId], references: [id])
-  player Player @relation(fields: [playerId], references: [id])
+  match  Match   @relation(fields: [matchId], references: [id])
+  player Player? @relation(fields: [playerId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  
 }
 
 // --------------------------------------
@@ -134,11 +136,11 @@ model Invite {
 
   // Quem enviou o convite 
   senderId String @db.Uuid
-  sender  Player    @relation("SentInvites", fields: [senderId], references: [id])
+  sender   Player @relation("SentInvites", fields: [senderId], references: [id])
 
   // Quem vai receber 
-receiverId String @db.Uuid
-receiver   Player @relation("ReceivedInvites", fields: [receiverId], references: [id])
+  receiverId String @db.Uuid
+  receiver   Player @relation("ReceivedInvites", fields: [receiverId], references: [id])
 
   // Para qual time é o convite
   teamId String @db.Uuid
@@ -151,7 +153,6 @@ receiver   Player @relation("ReceivedInvites", fields: [receiverId], references:
 enum InviteStatus {
   PENDING
   ACCEPTED
-
 }
 
 enum Role {
@@ -176,6 +177,7 @@ enum Stage {
 enum EventType {
   GOAL
   ASSIST
+  OWN_GOAL
 }
 
 enum PlayerRole {
