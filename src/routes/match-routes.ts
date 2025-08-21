@@ -11,10 +11,11 @@ matchRoutes.get("/", matchController.list);
 
 matchRoutes.use(ensureAuth);
 
-matchRoutes.use(verifyUserAuthorization(["ADMIN"]))
+matchRoutes.use(verifyUserAuthorization(["ADMIN"])) 
 
 matchRoutes.post("/", matchController.create);
 matchRoutes.delete("/:id",  matchController.delete);
+matchRoutes.patch("/:id",  matchController.updateStatus);
 
 
 export { matchRoutes };

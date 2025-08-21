@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import { uuidSchema } from "@/schemazod/uuid";
 import { MatchBodySchema } from "@/schemazod/match/create";
-import { MatchBodySchemaupdate } from "@/schemazod/match/update";
+import { MatchBodySchemaupdateStatus } from "@/schemazod/match/updatStatus";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
 import {
   createMatch,
   showMatchId,
   listMatch,
   deleteMatch,
+  updateStatus
+
 } from "@/services/match";
 
 class MatchController {
@@ -20,27 +22,33 @@ class MatchController {
   }
 
   async list(req: Request, res: Response) {
-  const {dataMatch} =  await listMatch()
-   res.json(dataMatch)
+    const { dataMatch } = await listMatch();
+    res.json(dataMatch);
   }
 
   async showID(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
 
-     const {MatchId} = await showMatchId(id);
+    const { MatchId } = await showMatchId(id);
 
-     res.json(MatchId);
-   
+    res.json(MatchId);
   }
 
   async delete(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
-    const {dataDelete} =  await deleteMatch( id );
+    const { dataDelete } = await deleteMatch(id);
     res.json(dataDelete);
+  }
+  async updateStatus(req: Request, res: Response) {
+    const id = uuidSchema.parse(req.params);
+    const data = MatchBodySchemaupdateStatus.parse(req.body);
+    
+    
+    res.json();
   }
 
   // futuramente c o projeto crescer e criar + campeonatos coloco isActive COM PATCH
-  // para ficar aparecendo ou n mas por enquanto nao precisa 
+  // para ficar aparecendo ou n mas por enquanto nao precisa
 }
 
 export { MatchController };

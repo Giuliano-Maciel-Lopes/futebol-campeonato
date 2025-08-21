@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url  = env("DATABASE_URL")
 }
 
 // --------------------------------------
@@ -45,8 +45,9 @@ model Team {
   team1Matches Match[] @relation("Team1Matches")
   team2Matches Match[] @relation("Team2Matches")
 
-  invites Invite[] @relation("TeamInvites")
+  invites     Invite[]     @relation("TeamInvites")
   matchEvents MatchEvent[]
+  groupscore  GroupScore?
 }
 
 // --------------------------------------
@@ -81,14 +82,7 @@ model Player {
 }
 
 //  --------------------------------------
-model Group {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String // grupo A B C vai ser por sedds 180jogadores
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  teams Team[]
-}
 
 // ---------------------------------------
 model Match {
@@ -110,6 +104,7 @@ model Match {
   updatedAt DateTime @updatedAt
 
   events MatchEvent[]
+  status MatchStatus  @default(SCHEDULED)
 }
 
 // -------------------------------------
@@ -118,14 +113,12 @@ model MatchEvent {
 
   matchId  String    @db.Uuid
   playerId String?   @db.Uuid
-  teamId   String    @db.Uuid   // Time que marcou o gol
+  teamId   String    @db.Uuid // Time que marcou o gol
   type     EventType
 
   match  Match   @relation(fields: [matchId], references: [id])
   player Player? @relation(fields: [playerId], references: [id])
-  team   Team   @relation(fields: [teamId], references: [id])
-
-  
+  team   Team    @relation(fields: [teamId], references: [id])
 }
 
 // --------------------------------------
@@ -148,6 +141,35 @@ model Invite {
 
   // Status do pedido
   status InviteStatus @default(PENDING)
+}
+model Group {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String // grupo A B C vai ser por sedds 180jogadores
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teams      Team[]
+  groupscore GroupScore[]
+}
+
+model GroupScore {
+  id      String @id @default(uuid()) @db.Uuid
+  groupId String @db.Uuid
+  teamId  String @unique @db.Uuid
+
+  points         Int @default(0) // Pontos do time no grupo
+  played         Int @default(0) // Jogos jogados
+  win            Int @default(0) // Vitórias
+  drawn          Int @default(0) // Empates
+  lost           Int @default(0) // Derrotas
+  goalsFor       Int @default(0) // Gols feitos
+  goalsAgainst   Int @default(0) // Gols sofridos
+  goalDifference Int @default(0) // Saldo de gols
+
+  group Group @relation(fields: [groupId], references: [id])
+  team  Team  @relation(fields: [teamId], references: [id])
+
+  @@unique([groupId, teamId]) // Cada time só pode ter 1 pontuação por grupo
 }
 
 enum InviteStatus {
@@ -183,4 +205,10 @@ enum EventType {
 enum PlayerRole {
   JOGADOR
   CAPITAO
+}
+
+enum MatchStatus {
+  SCHEDULED // marcada mas ainda não começou
+  ONGOING // em andamento
+  FINISHED // terminou
 }
