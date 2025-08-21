@@ -3,7 +3,6 @@ import { uuidSchema } from "@/schemazod/uuid";
 import { MatcheEventBodySchema } from "@/schemazod/matche-event/create";
 import {
   createMatcheEvent,
-  showMatcheEventId,
   listMatcheEvent,
 } from "@/services/matche-event";
 
