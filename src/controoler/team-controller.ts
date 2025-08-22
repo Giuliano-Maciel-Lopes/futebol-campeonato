@@ -5,13 +5,14 @@ import {
   deleteTeam,
   showTeamId,
   updateTeam,
-IsactiveTeamUpdate
+  IsactiveTeamUpdate,
+  updateGrupId,
 } from "@/services/team";
 import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
 import { TeamUpdateSchema } from "@/schemazod/team/update";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
-
+import { TeamUpdateGrupIdBody } from "@/schemazod/team/UpdateGrupId";
 
 class TeamController {
   async create(req: Request, res: Response) {
@@ -52,14 +53,21 @@ class TeamController {
 
     res.status(200).json(teamDelete);
   }
-   async isActiveUpdate(req: Request, res: Response) {
+  async isActiveUpdate(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
-    const {isActive} = schemazBOdyIsactiveUpdate.parse(req.body);
+    const { isActive } = schemazBOdyIsactiveUpdate.parse(req.body);
 
-  const {teamIsActive} =   await IsactiveTeamUpdate({id , isActive})
+    const { teamIsActive } = await IsactiveTeamUpdate({ id, isActive });
 
-  res.status(200).json(teamIsActive);
-   }
+    res.status(200).json(teamIsActive);
+  }
+  async groupIdUpdate(req: Request, res: Response) {
+    const id = uuidSchema.parse(req.params.id);
+    const data = TeamUpdateGrupIdBody.parse(req.body);
+
+    const { addGrupsID } = await updateGrupId({ data, id });
+    res.status(200).json(addGrupsID);
+  }
 }
 
 export { TeamController };

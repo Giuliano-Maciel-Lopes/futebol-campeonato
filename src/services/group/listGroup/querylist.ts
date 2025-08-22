@@ -7,9 +7,12 @@ type ListProps = {
 
 export async function listGroups({ name }: ListProps) {
   let where: Prisma.GroupWhereInput;
-  where = name ? { name} : {};
+  where = name ? { name } : {};
 
-  const groups = await prisma.group.findMany({where , include:{groupscore:true ,teams:true},});
+  const groups = await prisma.group.findMany({
+    where,
+    include: { groupscore: true, teams: { select: { name: true } } },
+  });
 
   return { groups };
 }
