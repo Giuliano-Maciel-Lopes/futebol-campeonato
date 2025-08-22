@@ -8,10 +8,27 @@ type ListProps = {
 export async function listGroups({ name }: ListProps) {
   let where: Prisma.GroupWhereInput;
   where = name ? { name } : {};
-
   const groups = await prisma.group.findMany({
     where,
-    include: { groupscore: true, teams: { select: { name: true } } },
+    include: {
+      groupscore: {
+        select: {
+          points: true,
+          played: true,
+          win: true,
+          drawn: true,
+          lost: true,
+          goalsFor: true,
+          goalsAgainst: true,
+          goalDifference: true,
+          team: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   return { groups };
