@@ -11,3 +11,4 @@ export class GroupController {
     return res.status(200).json(groups);
   }
 }
+

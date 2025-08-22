@@ -9,3 +9,4 @@ const groupController = new GroupController();
 groupRoutes.get('/', groupController.listTable);
 
 export {groupRoutes}
+

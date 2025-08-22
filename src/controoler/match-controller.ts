@@ -8,8 +8,7 @@ import {
   showMatchId,
   listMatch,
   deleteMatch,
-  updateStatus
-
+  updateStatus,
 } from "@/services/match";
 
 class MatchController {
@@ -40,11 +39,11 @@ class MatchController {
     res.json(dataDelete);
   }
   async updateStatus(req: Request, res: Response) {
-    const id = uuidSchema.parse(req.params);
+    const id = uuidSchema.parse(req.params.id);
     const data = MatchBodySchemaupdateStatus.parse(req.body);
-    
-    
-    res.json();
+
+    const { statusmatch } = await updateStatus({ data, id });
+    res.json(statusmatch);
   }
 
   // futuramente c o projeto crescer e criar + campeonatos coloco isActive COM PATCH

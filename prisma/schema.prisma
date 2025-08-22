@@ -161,10 +161,10 @@ model GroupScore {
   played         Int @default(0) // Jogos jogados
   win            Int @default(0) // Vitórias
   drawn          Int @default(0) // Empates
-  lost           Int @default(0) // Derrotas
-  goalsFor       Int @default(0) // Gols feitos
-  goalsAgainst   Int @default(0) // Gols sofridos
-  goalDifference Int @default(0) // Saldo de gols
+  lost           Int @default(0) // Derrotas        
+  goalsFor       Int @default(0) // Gols feitos     
+  goalsAgainst   Int @default(0) // Gols sofridos  
+  goalDifference Int @default(0) // Saldo de gols   
 
   group Group @relation(fields: [groupId], references: [id])
   team  Team  @relation(fields: [teamId], references: [id])
