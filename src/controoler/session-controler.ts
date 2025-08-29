@@ -7,8 +7,8 @@ class SessionController {
   async create(req: Request, res: Response) {
     
     const data = createSessionSchema.parse(req.body)
-   const {token , user } =  await sessionCreate({data})
-        res.json({token , user})
+   const {token , datauser } =  await sessionCreate({data})
+        res.json({token , datauser})
   }
 }
 export {SessionController}

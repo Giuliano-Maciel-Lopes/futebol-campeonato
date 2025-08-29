@@ -28,7 +28,7 @@ export async  function sessionCreate({ data }: sessionCreateInput) {
 
   return{
     token, 
-    user: useData
+    datauser: useData
   }
 
 
