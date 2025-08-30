@@ -6,7 +6,8 @@ import {
   listplayer,
   updatePlayer,
   deletePlayer,
-  IsactivePlayerUpdate
+  IsactivePlayerUpdate,
+  showbyuserIdPlayer
 } from "@/services/player";
 import { uuidSchema } from "@/schemazod/uuid";
 import { PlayerBodySchemaupdate } from "@/schemazod/player/update";
@@ -63,6 +64,13 @@ class PlayerController {
 
     res.json(playerIsActive);
 
+  }
+  async playersByUser(req: Request, res: Response) {
+    const userId = req.user!.id
+
+   const { playerLog} = await showbyuserIdPlayer({userId})
+
+    res.status(200).json(playerLog)
   }
 }
 
