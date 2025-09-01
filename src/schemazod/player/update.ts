@@ -8,7 +8,7 @@ export const PlayerBodySchemaupdate = z.object({
   ).optional(),
   number: z.number().int().positive("O número deve ser positivo").optional(),
   photoUrl: z.string().optional(),
-  role: z.enum(["JOGADOR", "CAPITAO"]).optional(),
+ 
   
 });
 

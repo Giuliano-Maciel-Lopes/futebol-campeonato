@@ -7,11 +7,13 @@ import {
   updatePlayer,
   deletePlayer,
   IsactivePlayerUpdate,
-  showbyuserIdPlayer
+  showbyuserIdPlayer,
 } from "@/services/player";
 import { uuidSchema } from "@/schemazod/uuid";
 import { PlayerBodySchemaupdate } from "@/schemazod/player/update";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
+import { SchemaUploadCategory } from "@/schemazod/uploads/uploads";
+import { DiskStorageFile } from "@/providers/disktorage";
 
 class PlayerController {
   async create(req: Request, res: Response) {
@@ -36,13 +38,27 @@ class PlayerController {
 
   async update(req: Request, res: Response) {
     const role = req.user!.role;
-    const userId = req.user!.id;
-    // protegido pro middlaware
+    const userId = req.user!.id; // protegido pro middlaware
+
+    const diskStorageFile = new DiskStorageFile();
+
+    const dataupload = SchemaUploadCategory.parse({
+      file: req.file,
+      category: req.body.category,
+    });
+    let pathUpload: string | undefined;
+
+    if (dataupload.file && dataupload.category) {
+      pathUpload = await diskStorageFile.SaveFileTOCategory(
+        dataupload.file.filename,
+        dataupload.category
+      );
+    }
 
     const data = PlayerBodySchemaupdate.parse(req.body);
     const id = uuidSchema.parse(req.params.id);
     const { updatedDataIDplayer } = await updatePlayer({
-      data,
+      data: { ...data, photoUrl: pathUpload },
       id,
       role,
       userId,
@@ -58,19 +74,18 @@ class PlayerController {
   }
   async isActiveUpdate(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
-    const {isActive} = schemazBOdyIsactiveUpdate.parse(req.body);
+    const { isActive } = schemazBOdyIsactiveUpdate.parse(req.body);
 
-    const {playerIsActive } = await IsactivePlayerUpdate({ id, isActive });
+    const { playerIsActive } = await IsactivePlayerUpdate({ id, isActive });
 
     res.json(playerIsActive);
-
   }
   async playersByUser(req: Request, res: Response) {
-    const userId = req.user!.id
+    const userId = req.user!.id;
 
-   const { playerLog} = await showbyuserIdPlayer({userId})
+    const { playerLog } = await showbyuserIdPlayer({ userId });
 
-    res.status(200).json(playerLog)
+    res.status(200).json(playerLog);
   }
 }
 
