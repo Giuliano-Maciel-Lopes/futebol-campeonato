@@ -1,17 +1,23 @@
-import { SchemafileSchema } from "@/schemazod/uploads/uploads";
 import { Request, Response } from "express";
-
+import { SchemaUploadCategory } from "@/schemazod/uploads/uploads";
+import { DiskStorageFile } from "@/providers/disktorage";
 
 class UploadsController {
   async create(req: Request, res: Response) {
-  const file = SchemafileSchema.parse(req.file)
+    const DisktorageFile = new DiskStorageFile();
+    const dataUpload = SchemaUploadCategory.parse({
+      file: req.file,
+      category: req.body.category,
+    });
+    let uploadpath;
+    if (dataUpload.category && dataUpload.file) {
+      uploadpath = await DisktorageFile.SaveFileTOCategory(
+        dataUpload.file?.filename,
+        dataUpload.category
+      );
+    }
 
-         res.json({
-        filename: file.filename,
-        path: file.path,
-        mimetype: file.mimetype,
-        size: file.size,
-      });
+    res.json(uploadpath);
   }
 }
 

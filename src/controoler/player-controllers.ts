@@ -20,7 +20,10 @@ class PlayerController {
     const userId = req.user!.id; // protegido na rota
 
     const data = PlayerBodySchema.parse(req.body);
-    const { dataCart } = await createPlayer({ data, userId });
+    const { dataCart } = await createPlayer({
+      data,
+      userId,
+    });
 
     res.status(200).json(dataCart);
   }
@@ -40,25 +43,10 @@ class PlayerController {
     const role = req.user!.role;
     const userId = req.user!.id; // protegido pro middlaware
 
-    const diskStorageFile = new DiskStorageFile();
-
-    const dataupload = SchemaUploadCategory.parse({
-      file: req.file,
-      category: req.body.category,
-    });
-    let pathUpload: string | undefined;
-
-    if (dataupload.file && dataupload.category) {
-      pathUpload = await diskStorageFile.SaveFileTOCategory(
-        dataupload.file.filename,
-        dataupload.category
-      );
-    }
-
     const data = PlayerBodySchemaupdate.parse(req.body);
     const id = uuidSchema.parse(req.params.id);
     const { updatedDataIDplayer } = await updatePlayer({
-      data: { ...data, photoUrl: pathUpload },
+      data,
       id,
       role,
       userId,
