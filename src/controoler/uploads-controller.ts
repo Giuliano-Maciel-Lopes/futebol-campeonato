@@ -17,7 +17,7 @@ class UploadsController {
       );
     }
 
-    res.json(uploadpath);
+    res.json({pathImg:uploadpath});
   }
 }
 
