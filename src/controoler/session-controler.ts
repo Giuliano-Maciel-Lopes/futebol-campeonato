@@ -5,10 +5,19 @@ import { createSessionSchema } from "@/schemazod/session/creat";
 
 class SessionController {
   async create(req: Request, res: Response) {
-    
-    const data = createSessionSchema.parse(req.body)
-   const {token , datauser } =  await sessionCreate({data})
-        res.json({token , datauser})
+    const data = createSessionSchema.parse(req.body);
+    const { token, datauser } = await sessionCreate({ data });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // só HTTPS em produção
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24, // 1 dia
+      path: "/",
+      ...(process.env.NODE_ENV === "production" && { domain: ".meusite.com" }), // só em produção
+    });
+
+    res.json({datauser});
   }
 }
-export {SessionController}
+export { SessionController };
