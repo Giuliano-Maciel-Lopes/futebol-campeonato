@@ -1,12 +1,23 @@
-import { prisma } from "@/database/prisma-config"
+import { prisma } from "@/database/prisma-config";
+import { ListPlayerParams } from "@/schemazod/player/list";
 
-type data ={
-    
-}
+type Props = {
+  params: ListPlayerParams;
+};
 
-export async function listplayer(){
-    // ao longo do projeto add query 
-    // tds podem ver n tem problema 
-   const playersfull =  await prisma.player.findMany()
-   return {playersfull}
+export async function listplayer({ params }: Props) {
+  const { assists, goals, searchName } = params;
+
+  const playersfull = await prisma.player.findMany({
+    where: {
+      nameCart: { contains: searchName, mode: "insensitive" },
+    },
+    orderBy: assists
+      ? { assists: "desc" }
+      : goals
+      ? { goals: "desc" }
+      : { nameCart: "asc" },
+    take: goals || assists ? 10 : undefined,
+  });
+  return { playersfull };
 }

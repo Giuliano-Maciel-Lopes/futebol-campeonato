@@ -12,8 +12,7 @@ import {
 import { uuidSchema } from "@/schemazod/uuid";
 import { PlayerBodySchemaupdate } from "@/schemazod/player/update";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
-import { SchemaUploadCategory } from "@/schemazod/uploads/uploads";
-import { DiskStorageFile } from "@/providers/disktorage";
+import { listPlayerParamsSchema } from "@/schemazod/player/list";
 
 class PlayerController {
   async create(req: Request, res: Response) {
@@ -28,7 +27,10 @@ class PlayerController {
     res.status(200).json(dataCart);
   }
   async list(req: Request, res: Response) {
-    const { playersfull } = await listplayer();
+    
+    const params = listPlayerParamsSchema.parse(req.query)
+
+    const { playersfull } = await listplayer({params});
     res.status(200).json(playersfull);
   }
 
