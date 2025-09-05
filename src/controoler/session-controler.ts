@@ -7,7 +7,7 @@ class SessionController {
   async create(req: Request, res: Response) {
     const data = createSessionSchema.parse(req.body);
     const { token, datauser } = await sessionCreate({ data });
-
+  
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // só HTTPS em produção
@@ -17,7 +17,7 @@ class SessionController {
       ...(process.env.NODE_ENV === "production" && { domain: ".meusite.com" }), // só em produção
     });
 
-    res.json({datauser});
+    res.json({datauser ,});
   }
 }
 export { SessionController };

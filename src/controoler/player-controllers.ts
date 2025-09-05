@@ -72,6 +72,7 @@ class PlayerController {
     const userId = req.user!.id;
 
     const { playerLog } = await showbyuserIdPlayer({ userId });
+     console.log(req.cookies); 
 
     res.status(200).json(playerLog);
   }
