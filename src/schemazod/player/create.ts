@@ -8,7 +8,7 @@ export const PlayerBodySchema = z.object({
   ),
   number: z.coerce.number().int().positive("O número deve ser positivo").optional(),
   photoUrl: z.string().optional(),
-  role: z.enum(["JOGADOR", "CAPITAO"]).optional(),
+  role: z.enum(["PLAYER", "CAPITAO"]).optional(),
 });
 
 export type PlayerInput = z.infer<typeof PlayerBodySchema>;

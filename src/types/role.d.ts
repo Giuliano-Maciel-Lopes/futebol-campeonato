@@ -1,4 +1,4 @@
 export type Role = {
-  "JOGADOR", 
+  "PLAYER", 
   "ADMIN"
 };
