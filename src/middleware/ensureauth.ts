@@ -11,13 +11,11 @@ interface TokenPayload {
 
 function ensureAuth(req: Request, res: Response, next: NextFunction) {
   try {
-    const authorization = req.headers.authorization;
+    const token = req.cookies?.token;
 
-    if (!authorization) {
-      throw new AppError("TOKEN nao encontrado", 401);
+    if (!token) {
+      throw new AppError("TOKEN não encontrado", 401);
     }
-
-    const [, token] = authorization.split(" ");
 
     const { role, sub: user_id } = jwt.verify(
       token,
@@ -28,7 +26,8 @@ function ensureAuth(req: Request, res: Response, next: NextFunction) {
       id: user_id,
       role,
     };
-    console.log('Role do usuário em ensureAuth:', req.user.role);
+
+    console.log("Role do usuário em ensureAuth:", req.user.role);
     next();
   } catch (error) {
     throw new AppError("TOKEN INVÁLIDO!!", 401);
