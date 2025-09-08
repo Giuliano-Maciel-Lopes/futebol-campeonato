@@ -8,5 +8,6 @@ interface DeletePlayerProps {
 export async function deletePlayer({ id }: DeletePlayerProps) {
   await findPlayerById(id);
 
-  await prisma.player.delete({ where: { id } });
+const deletedata =  await prisma.player.delete({ where: { id } });
+return {deletedata}
 }

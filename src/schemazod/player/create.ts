@@ -6,7 +6,7 @@ export const PlayerBodySchema = z.object({
     ["GOLEIRO", "DEFENSOR", "MEIOCAMPO", "ATACANTE"],
     "escolha uma opçao"
   ),
-  number: z.coerce.number().int().positive("O número deve ser positivo").optional(),
+  number: z.coerce.number().int().positive("O número deve ser positivo"),
   photoUrl: z.string().optional(),
   role: z.enum(["PLAYER", "CAPITAO"]).optional(),
 });

@@ -59,8 +59,8 @@ class PlayerController {
 
   async delete(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
-    await deletePlayer({ id });
-    res.json({ message: "Remover jogador (exemplo)" });
+   const {deletedata}= await deletePlayer({ id });
+    res.json(deletedata);
   }
   async isActiveUpdate(req: Request, res: Response) {
     const id = uuidSchema.parse(req.params.id);
