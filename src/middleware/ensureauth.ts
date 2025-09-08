@@ -10,6 +10,8 @@ interface TokenPayload {
 }
 
 function ensureAuth(req: Request, res: Response, next: NextFunction) {
+    if (req.path.startsWith("/TPM")) return next();
+    
   try {
     const token = req.cookies?.token;
 

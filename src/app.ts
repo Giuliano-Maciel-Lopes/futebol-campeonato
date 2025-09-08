@@ -14,11 +14,13 @@ app.use(cors({
    
   credentials: true, 
 }));
-app.use("/TPM", express.static(path.join(__dirname, "..", "public",  "TPM")));
+
 
 app.use(express.json());
 app.use(cookieParser())
+app.use("/TPM", express.static(path.join(__dirname, "..", "public",  "TPM")));
 
 app.use(routes);
+
 
 app.use(errorHandling);
