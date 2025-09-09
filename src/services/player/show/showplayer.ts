@@ -1,16 +1,25 @@
 import { prisma } from "@/database/prisma-config";
-import type{ UuidInput} from "@/schemazod/uuid";
+import type { UuidInput } from "@/schemazod/uuid";
 import { AppError } from "@/utils/AppEroor";
-import { findPlayerById} from "@/utils/prismaHelpersutils";
+import { findPlayerById } from "@/utils/prismaHelpersutils";
+import { Prisma, Role } from "@prisma/client";
 
+type Props = {
+  id: UuidInput;
+  role: Role;
+};
 
+export async function showPlayerId({ id, role }: Props) {
+  await findPlayerById(id);
+  const ADMIN = role === "ADMIN";
 
-export async function showPlayerId(id:UuidInput) {
-    await findPlayerById(id);
+  let whereActive: Prisma.PlayerWhereInput;
 
-  const playerCardId = await prisma.player.findUnique({ where: { id } });
+  whereActive = ADMIN ? {} : { isActive: true };
 
-  
+  const playerCardId = await prisma.player.findFirst({
+    where: { id, ...whereActive },
+  });
 
   return { playerCardId };
 }

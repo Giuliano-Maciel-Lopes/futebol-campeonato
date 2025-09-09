@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { PlayerController } from "@/controoler/player-controllers";
 import { ensureAuth, verifyUserAuthorization } from "@/middleware";
+import { optionalAuth } from "@/middleware/optionalAuth";
 
 
 const playerRoutes = Router();
@@ -10,8 +11,8 @@ const playerController = new PlayerController();
 
 
 playerRoutes.get("/me", ensureAuth ,  playerController.playersByUser)
-playerRoutes.get("/:id", playerController.showID);
-playerRoutes.get("/", playerController.list);
+playerRoutes.get("/:id", optionalAuth ,  playerController.showID);
+playerRoutes.get("/", optionalAuth ,  playerController.list);
 
 playerRoutes.use(ensureAuth);
 

@@ -27,16 +27,19 @@ class PlayerController {
     res.status(200).json(dataCart);
   }
   async list(req: Request, res: Response) {
+    const role = req.user!.role // portegido por enseureOptional
     
     const params = listPlayerParamsSchema.parse(req.query)
 
-    const { playersfull } = await listplayer({params});
+    const { playersfull } = await listplayer({params ,role});
     res.status(200).json(playersfull);
   }
 
   async showID(req: Request, res: Response) {
+      const role = req.user!.role // protegido por ensuere optional 
+
     const id = uuidSchema.parse(req.params.id);
-    const { playerCardId } = await showPlayerId(id);
+    const { playerCardId } = await showPlayerId({id , role});
 
     res.json(playerCardId);
   }
