@@ -5,7 +5,7 @@ import { Player, Prisma, Role } from "@prisma/client";
 
 type Props = {
   params: ListPlayerParams;
-  role:Role
+  role?:Role
 };
 
 export async function listplayer({ params , role }: Props) {
@@ -19,7 +19,7 @@ export async function listplayer({ params , role }: Props) {
   const playersfull = await prisma.$queryRaw<Player>`
      SELECT *, (goals + assists) AS participations
     FROM "Player"
-      ${!ADMIN ? Prisma.sql`WHERE "isActive" = TRUE` : Prisma.sql``}
+    ${!ADMIN ? Prisma.sql`WHERE "isActive" = TRUE` : Prisma.sql``}
     ORDER BY participations DESC
     LIMIT 50
   `;

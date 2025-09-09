@@ -6,7 +6,7 @@ import { Prisma, Role } from "@prisma/client";
 
 type Props = {
   id: UuidInput;
-  role: Role;
+  role?: Role;
 };
 
 export async function showPlayerId({ id, role }: Props) {
