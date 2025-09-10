@@ -144,7 +144,7 @@ model Invite {
 }
 model Group {
   id        String   @id @default(uuid()) @db.Uuid
-  name      String // grupo A B C vai ser por sedds 180jogadores
+  name      String  @unique         // com anme unique ja que por enuqnato vai ser 1 campeonato 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -19,7 +19,7 @@ export async function listplayer({ params , role }: Props) {
   const playersfull = await prisma.$queryRaw<Player>`
      SELECT *, (goals + assists) AS participations
     FROM "Player"
-    ${!ADMIN ? Prisma.sql`WHERE "isActive" = TRUE` : Prisma.sql``}
+    WHERE ${ADMIN ? Prisma.sql`1=1` : Prisma.sql`"isActive" = TRUE`}
     ORDER BY participations DESC
     LIMIT 50
   `;
