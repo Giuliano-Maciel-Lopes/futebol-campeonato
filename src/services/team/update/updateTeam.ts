@@ -2,9 +2,7 @@ import { prisma } from "@/database/prisma-config";
 import { AppError } from "@/utils/AppEroor";
 import { TeamUpdateInput } from "@/schemazod/team/update";
 import { Role } from "@prisma/client";
-import {
-  findTeamById,
-} from "@/utils/prismaHelpersutils";
+import { findTeamById } from "@/utils/prismaHelpersutils";
 
 interface UpdateTeamRequest {
   id: string;
@@ -32,9 +30,9 @@ export async function updateTeam({
         403
       );
     }
-    if (data.captainId) {
+    if (data.captainId ||data.captainId ) {
       throw new AppError(
-        "Somente Administradores pode mudar o capitao de um Time  entre contato com a equipe ",
+        "Somente Administradores pode mudar o capitao e o grupo de um time entre contato com a equipe ",
         403
       );
     }

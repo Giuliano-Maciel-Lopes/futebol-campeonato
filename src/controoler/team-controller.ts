@@ -6,7 +6,6 @@ import {
   showTeamId,
   updateTeam,
   IsactiveTeamUpdate,
-  updateGrupId,
 } from "@/services/team";
 import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
@@ -61,13 +60,7 @@ class TeamController {
 
     res.status(200).json(teamIsActive);
   }
-  async groupIdUpdate(req: Request, res: Response) {
-    const id = uuidSchema.parse(req.params.id);
-    const data = TeamUpdateGrupIdBody.parse(req.body);
-
-    const { addGrupsID } = await updateGrupId({ data, id });
-    res.status(200).json(addGrupsID);
-  }
+  
 }
 
 export { TeamController };
