@@ -5,9 +5,10 @@ import { Role } from "@prisma/client";
 import {
   findTeamById,
   findPlayerById,
-  findPlayerByUserId,
 } from "@/utils/prismaHelpersutils";
 import { CheckPermission } from "./checkdPermission";
+import { IndexPlayerIndexMaxIndice } from "@/services/utils/indexPlayersmax";
+
 
 interface UpdateTeamRequest {
   id: string;
@@ -27,17 +28,23 @@ export async function updateTeam({
 
   await CheckPermission({ data, userId, role, team }); //
 
-  if (data.captainId && team.captainId !== data.captainId) {
+  if (data.captainId && team.captainId !== data.captainId) { 
     const { player: CaptainPast } = await findPlayerById(team.captainId);
     const { player: CaptainNEW } = await findPlayerById(data.captainId);
 
+    if(CaptainNEW.teamId && CaptainNEW.teamId !==team.id ){ 
+      throw new AppError("Esse jogador ja esta em um clube diferente do informado")
+    }
+     const {firstAvailableIndex} = IndexPlayerIndexMaxIndice({team})
+     
     await prisma.player.update({
       where: { id: CaptainPast.id },
       data: { role: "PLAYER" },
     });
+    if(data.captainId !==team.id){}
     await prisma.player.update({
       where: { id: CaptainNEW.id },
-      data: { role: "CAPITAO", teamId:team.id }, // resolver ess eporblema
+      data: { role: "CAPITAO", teamId:team.id , positionIndex:firstAvailableIndex }, 
     });
   }
 

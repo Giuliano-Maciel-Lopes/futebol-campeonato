@@ -1,5 +1,6 @@
 import { prisma } from "@/database/prisma-config";
 import { InviteUpdate } from "@/schemazod/invite/update";
+import { IndexPlayerIndexMaxIndice } from "@/services/utils/indexPlayersmax";
 import { AppError } from "@/utils/AppEroor";
 import {
   findInviteById,
@@ -26,13 +27,12 @@ export async function updateInvite({ id, data, userId }: updateProps) {
   if (data.status === "ACCEPTED") {
     const { team } = await findTeamById(invite.teamId);
 
-    if (team.players.length >= 14) {
-      throw new AppError("tima ja atingiu o limite de jogadores", 400);
-    }
+   const {firstAvailableIndex} =  IndexPlayerIndexMaxIndice({team})
 
     await prisma.player.update({
       where: { id: invite.receiverId },
-      data: { teamId: invite.teamId },
+      data: { teamId: invite.teamId  ,positionIndex:firstAvailableIndex},
+
     }); // jogador aceita entrar no time
   }
 

@@ -20,7 +20,7 @@ export async function createTeam({ data }: CreateTeamRequest) {
 
   await prisma.player.update({
     where: { id: data.captainId },
-    data: { teamId: TeamCreate.id, role: "CAPITAO" },
+    data: { teamId: TeamCreate.id, role: "CAPITAO", positionIndex:0},
   });
 
   return { TeamCreate };
