@@ -42,6 +42,6 @@ export async function findMatchById(id: string) {
 
 export async function findPlayerByUserId(userId: string) {
   const player = await prisma.player.findUnique({ where: { userId } });
-  if (!player) throw new AppError("Player não encontrado.", 404);
+  if (!player) throw new AppError("Player não encontradoo.", 404);
   return { player };
 }

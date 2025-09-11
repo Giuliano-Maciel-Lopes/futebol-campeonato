@@ -3,7 +3,7 @@ import { TeamBodySchemaInput } from "@/schemazod/team/create";
 import { AppError } from "@/utils/AppEroor";
 import { findPlayerById } from "@/utils/prismaHelpersutils";
 
-
+// so adm pode criar time ta no middlawqare
 interface CreateTeamRequest {
   data: TeamBodySchemaInput;
 }

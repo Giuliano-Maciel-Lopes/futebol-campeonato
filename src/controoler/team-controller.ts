@@ -11,7 +11,7 @@ import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
 import { TeamUpdateSchema } from "@/schemazod/team/update";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
-import { TeamUpdateGrupIdBody } from "@/schemazod/team/UpdateGrupId";
+
 
 class TeamController {
   async create(req: Request, res: Response) {
