@@ -48,6 +48,8 @@ model Team {
   invites     Invite[]     @relation("TeamInvites")
   matchEvents MatchEvent[]
   groupscore  GroupScore?
+
+
 }
 
 // --------------------------------------
@@ -62,7 +64,9 @@ model Player {
   updatedAt DateTime   @updatedAt
   userId    String     @unique @db.Uuid
   role      PlayerRole @default(PLAYER)
+ positionIndex Int?     
 
+ 
   goals   Int @default(0)
   assists Int @default(0)
 
@@ -79,6 +83,8 @@ model Player {
 
   sentInvites     Invite[] @relation("SentInvites")
   receivedInvites Invite[] @relation("ReceivedInvites")
+ 
+ @@unique([teamId, positionIndex]) 
 }
 
 //  --------------------------------------
