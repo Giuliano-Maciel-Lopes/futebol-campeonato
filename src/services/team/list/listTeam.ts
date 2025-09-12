@@ -7,6 +7,8 @@ export async function listTeam() {
         select: {
           nameCart: true,
           photoUrl: true,
+          positionIndex:true,
+          id:true
         },
       },
     },
