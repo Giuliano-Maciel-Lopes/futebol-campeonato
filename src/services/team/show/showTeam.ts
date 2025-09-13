@@ -1,12 +1,20 @@
 import { prisma } from "@/database/prisma-config";
-import { AppError } from "@/utils/AppEroor";
 import { findTeamById } from "@/utils/prismaHelpersutils";
+import { Prisma, Role } from "@prisma/client";
 
-export async function showTeamId(id: string) {
-  await  findTeamById(id)
+
+type Props = {
+  role?: Role;
+  id: string;
+};
+
+export async function showTeamId({ id, role }: Props) {
+  await findTeamById(id);
+  const ADM = role === "ADMIN";
+  const whereActive: Prisma.TeamWhereInput = ADM ? {} : { isActive: true };
 
   const teamId = await prisma.team.findFirst({
-    where: { id },
+    where: { id ,...whereActive },
     include: {
       players: {
         select: {
@@ -16,8 +24,6 @@ export async function showTeamId(id: string) {
       },
     },
   });
-
- 
 
   return { teamId };
 }

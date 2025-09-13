@@ -24,12 +24,15 @@ class TeamController {
   }
 
   async list(req: Request, res: Response) {
-    const { fullTeam } = await listTeam();
+    const role = req.user?.role
+
+    const { fullTeam } = await listTeam({role});
     res.status(200).json(fullTeam);
   }
   async showID(req: Request, res: Response) {
+     const role = req.user?.role
     const id = uuidSchema.parse(req.params.id);
-    const { teamId } = await showTeamId(id);
+    const { teamId } = await showTeamId({id ,role });
     res.status(200).json(teamId);
   }
 

@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { TeamController } from "@/controoler/team-controller";
 import { ensureAuth, verifyUserAuthorization } from "@/middleware";
+import { optionalAuth } from "@/middleware/optionalAuth";
 
 
 const teamRoutes = Router();
 
 const teamController = new TeamController();
-teamRoutes.get("/:id", teamController.showID);
-teamRoutes.get("/", teamController.list);
+teamRoutes.get("/:id", optionalAuth ,  teamController.showID);
+teamRoutes.get("/", optionalAuth ,  teamController.list);
 
 teamRoutes.use(ensureAuth)
 
