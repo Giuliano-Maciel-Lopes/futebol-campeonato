@@ -81,6 +81,7 @@ class PlayerController {
 
     res.status(200).json(playerLog);
   }
+ 
 }
 
 export { PlayerController };

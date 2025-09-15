@@ -6,7 +6,7 @@ export async function findUserById(id: string) {
   if (!user) {
     throw new AppError("Usuário não encontrado.", 404);
   }
-  return {user};
+  return { user };
 }
 
 export async function findPlayerById(id: string) {
@@ -14,15 +14,18 @@ export async function findPlayerById(id: string) {
   if (!player) {
     throw new AppError("player não encontrado.", 404);
   }
-  return {player};
+  return { player };
 }
 
 export async function findTeamById(id: string) {
-  const team = await prisma.team.findUnique({ where: { id } , include:{players:true} });
+  const team = await prisma.team.findUnique({
+    where: { id },
+    include: { players: true },
+  });
   if (!team) {
     throw new AppError("Time não encontrado.", 404);
   }
-  return {team};
+  return { team };
 }
 
 export async function findInviteById(id: string) {
@@ -30,18 +33,21 @@ export async function findInviteById(id: string) {
   if (!invite) {
     throw new AppError("Convite não encontrado.", 404);
   }
-  return {invite};
+  return { invite };
 }
 export async function findMatchById(id: string) {
   const match = await prisma.match.findUnique({ where: { id } });
   if (!match) {
     throw new AppError("partida não encontrado.", 404);
   }
-  return {match};
+  return { match };
 }
 
 export async function findPlayerByUserId(userId: string) {
-  const player = await prisma.player.findUnique({ where: { userId } });
+  const player = await prisma.player.findUnique({
+    where: { userId },
+    include: { captainOf: true },
+  });
   if (!player) throw new AppError("Player não encontradoo.", 404);
   return { player };
 }

@@ -26,4 +26,5 @@ playerRoutes.patch("/isActive/:id", verifyUserAuthorization(["ADMIN"]) ,  player
 
 
 
+
 export { playerRoutes };
