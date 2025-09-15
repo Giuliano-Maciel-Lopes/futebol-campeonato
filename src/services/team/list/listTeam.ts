@@ -1,5 +1,6 @@
 import { prisma } from "@/database/prisma-config";
 import { Prisma, Role } from "@prisma/client";
+import { teamInclude } from "../utils/getinclude";
 
 type Props = {
   role?: Role;
@@ -11,16 +12,7 @@ export async function listTeam({ role }: Props) {
   const whereActive: Prisma.TeamWhereInput = ADM ? {} : { isActive: true };
   const fullTeam = await prisma.team.findMany({
     where: { ...whereActive },
-    include: {
-      players: {
-        select: {
-          nameCart: true,
-          photoUrl: true,
-          positionIndex: true,
-          id: true,
-        },
-      },
-    },
+    include: teamInclude
   });
 
   return { fullTeam };

@@ -7,7 +7,6 @@ export const PlayerSlotSchema = z.object({
 });
 
 export const TeamFormationSchema = z.object({
-  teamId: z.string(),
   players: z.array(PlayerSlotSchema), // titulares e reservas juntos
 });
 

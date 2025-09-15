@@ -13,6 +13,7 @@ import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
 import { TeamUpdateSchema } from "@/schemazod/team/update";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
+import { TeamFormationSchema } from "@/schemazod/player/updatePositionindex";
 
 class TeamController {
   async create(req: Request, res: Response) {
@@ -38,7 +39,7 @@ class TeamController {
   }
   async showTeamUserID(req: Request, res: Response) {
     const userId = req.user!.id; // protegido por middlaware
-   const TeamUser = await showTeamUserID({ userId });
+    const TeamUser = await showTeamUserID({ userId });
 
     res.status(200).json(TeamUser);
   }
@@ -71,9 +72,13 @@ class TeamController {
     res.status(200).json(teamIsActive);
   }
   async PositionIndexeUpdate(req: Request, res: Response) {
+    const userId = req.user!.id; // PROTEGIDO POR Middlaware
     const id = uuidSchema.parse(req.params.id);
+    const data = TeamFormationSchema.parse(req.body);
 
-    res.status(200).json();
+    await UpdatePositionIndexTeam({ id, userId, data });
+
+    res.status(200).json("Alteraçoes feitas com sucesso");
   }
 }
 

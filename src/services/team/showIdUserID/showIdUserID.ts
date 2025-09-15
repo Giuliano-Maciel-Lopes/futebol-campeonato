@@ -1,5 +1,6 @@
 import { prisma } from "@/database/prisma-config";
-import { findPlayerByUserId, findTeamById, findUserById } from "@/utils/prismaHelpersutils"
+import { findPlayerByUserId, findTeamById,  } from "@/utils/prismaHelpersutils"
+import { teamInclude } from "../utils/getinclude";
 
 type Props ={
     userId:string
@@ -12,7 +13,7 @@ const  {player} = await findPlayerByUserId(userId)
   }
    const {team} =  await findTeamById(player.teamId)
 
-  const TeamUser =  await prisma.team.findFirst({where:{id:team.id}})
+  const TeamUser =  await prisma.team.findFirst({where:{id:team.id}, include:teamInclude})
 
   return TeamUser
 }

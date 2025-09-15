@@ -1,6 +1,7 @@
 import { prisma } from "@/database/prisma-config";
 import { findTeamById } from "@/utils/prismaHelpersutils";
 import { Prisma, Role } from "@prisma/client";
+import { teamInclude } from "../utils/getinclude";
 
 
 type Props = {
@@ -15,14 +16,7 @@ export async function showTeamId({ id, role }: Props) {
 
   const teamId = await prisma.team.findFirst({
     where: { id ,...whereActive },
-    include: {
-      players: {
-        select: {
-          nameCart: true,
-          number: true,
-        },
-      },
-    },
+    include: teamInclude
   });
 
   return { teamId };
