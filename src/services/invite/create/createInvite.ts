@@ -17,7 +17,8 @@ interface ICreateInviteRequest {
 export async function createInvite({ data, userId }: ICreateInviteRequest) {
   // a unica pessoa que pode criar um convite é o capitao do time 
     await findTeamById(data.teamId);
-    await findPlayerById(data.receiverId);
+   const {player: playerReceiverId}=  await findPlayerById(data.receiverId);
+    
 
   const player = await prisma.player.findFirst({
     where: { userId },
@@ -26,6 +27,10 @@ export async function createInvite({ data, userId }: ICreateInviteRequest) {
 
   if (!player) {
     throw new AppError("esse jogador nao tem uma cartinha", 404); // ou seja n e capiato nem player 
+  }
+  if(playerReceiverId.teamId ){
+        throw new AppError("esse jogador ja etsa em um time ", 404);
+    
   }
 
   if (!player.captainOf || player.captainOf.id !== data.teamId) { // capitao do time / e não so capitao  

@@ -4,6 +4,7 @@ import { IndexPlayerIndexMaxIndice } from "@/services/utils/indexPlayersmax";
 import { AppError } from "@/utils/AppEroor";
 import {
   findInviteById,
+  findPlayerById,
   findPlayerByUserId,
   findTeamById,
 } from "@/utils/prismaHelpersutils";
@@ -16,12 +17,16 @@ interface updateProps {
 
 export async function updateInvite({ id, data, userId }: updateProps) {
   // apenas quem recebeu o convite pode atualizar
-
+  
   const { invite } = await findInviteById(id);
   const { player } = await findPlayerByUserId(userId);
+  const {player: playerReceiverdId} =  await findPlayerById(invite.receiverId)
 
   if (invite.receiverId !== player.id) {
-    throw new Error("Você não tem permissão para atualizar este convite");
+    throw new AppError("Você não tem permissão para atualizar este convite");
+  }
+  if(playerReceiverdId.teamId){
+     throw new AppError("Você ja possui  um time ");
   }
 
   if (data.status === "ACCEPTED") {
