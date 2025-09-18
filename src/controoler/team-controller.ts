@@ -13,7 +13,7 @@ import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
 import { TeamUpdateSchema } from "@/schemazod/team/update";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
-import { TeamFormationSchema } from "@/schemazod/player/updatePositionindex";
+import { TeamFormationSchema } from "@/schemazod/team/updatePositionindex";
 
 class TeamController {
   async create(req: Request, res: Response) {

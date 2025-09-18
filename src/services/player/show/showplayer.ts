@@ -3,6 +3,7 @@ import type { UuidInput } from "@/schemazod/uuid";
 import { AppError } from "@/utils/AppEroor";
 import { findPlayerById } from "@/utils/prismaHelpersutils";
 import { Prisma, Role } from "@prisma/client";
+import { playerInclude } from "../utils/getincludes";
 
 type Props = {
   id: UuidInput;
@@ -19,6 +20,7 @@ export async function showPlayerId({ id, role }: Props) {
 
   const playerCardId = await prisma.player.findFirst({
     where: { id, ...whereActive },
+    include: playerInclude,
   });
 
   return { playerCardId };

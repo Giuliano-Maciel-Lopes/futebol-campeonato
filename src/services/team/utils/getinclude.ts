@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 
 
 export const teamInclude = {
+  
   players: {
     select: {
       id: true,
@@ -10,4 +11,9 @@ export const teamInclude = {
       positionIndex: true,
     },
   },
+  captain:{
+    select:{
+      userId:true
+    }
+  }
 } satisfies Prisma.TeamInclude;
