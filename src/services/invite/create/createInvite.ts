@@ -7,6 +7,7 @@ import {
   findTeamById,
   findPlayerById,
 } from "@/utils/prismaHelpersutils";
+import { inviteInclude } from "../utils/includesInvites";
 
 
 interface ICreateInviteRequest {
@@ -29,7 +30,7 @@ export async function createInvite({ data, userId }: ICreateInviteRequest) {
     throw new AppError("esse jogador nao tem uma cartinha", 404); // ou seja n e capiato nem player 
   }
   if(playerReceiverId.teamId ){
-        throw new AppError("esse jogador ja etsa em um time ", 404);
+        throw new AppError("esse jogador ja esta em um time ", 404);
     
   }
 
@@ -39,6 +40,7 @@ export async function createInvite({ data, userId }: ICreateInviteRequest) {
 
   const invitecreate = await prisma.invite.create({
     data: { senderId: player.id, ...data },
+    include:inviteInclude
   });
 
   return { invitecreate };
