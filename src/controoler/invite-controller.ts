@@ -21,9 +21,10 @@ class InviteController {
   }
 
   async list(req: Request, res: Response) {
+    const {status} = InviteUpdateSchema.parse(req.query);
     const userId = req.user!.id; // protegido por middlaware
 
-    const { invite } = await listInvite({ userId });
+    const { invite } = await listInvite({ userId , status });
 
     res.status(200).json(invite);
   }
