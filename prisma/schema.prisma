@@ -181,6 +181,7 @@ model GroupScore {
 enum InviteStatus {
   PENDING
   ACCEPTED
+  REJECT
 }
 
 enum Role {

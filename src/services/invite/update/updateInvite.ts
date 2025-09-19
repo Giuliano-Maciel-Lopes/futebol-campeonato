@@ -17,27 +17,31 @@ interface updateProps {
 
 export async function updateInvite({ id, data, userId }: updateProps) {
   // apenas quem recebeu o convite pode atualizar
-  
+
   const { invite } = await findInviteById(id);
   const { player } = await findPlayerByUserId(userId);
-  const {player: playerReceiverdId} =  await findPlayerById(invite.receiverId)
+  const { player: playerReceiverdId } = await findPlayerById(invite.receiverId);
 
   if (invite.receiverId !== player.id) {
     throw new AppError("Você não tem permissão para atualizar este convite");
   }
-  if(playerReceiverdId.teamId){
-     throw new AppError("Você ja possui  um time ");
+  if (playerReceiverdId.teamId && data.status === "ACCEPTED") {
+    throw new AppError("Você ja possui  um time ");
+  }
+  if (invite.status !== "PENDING") {
+    throw new AppError(
+      "Esse convite já foi atualizado e não pode ser alterado novamente"
+    );
   }
 
   if (data.status === "ACCEPTED") {
     const { team } = await findTeamById(invite.teamId);
 
-   const {firstAvailableIndex} =  IndexPlayerIndexMaxIndice({team})
+    const { firstAvailableIndex } = IndexPlayerIndexMaxIndice({ team });
 
     await prisma.player.update({
       where: { id: invite.receiverId },
-      data: { teamId: invite.teamId  ,positionIndex:firstAvailableIndex},
-
+      data: { teamId: invite.teamId, positionIndex: firstAvailableIndex },
     }); // jogador aceita entrar no time
   }
 

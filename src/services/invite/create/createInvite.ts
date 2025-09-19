@@ -2,12 +2,11 @@ import { prisma } from "@/database/prisma-config";
 import { InviteBodyInput } from "@/schemazod/invite/create";
 import { AppError } from "@/utils/AppEroor";
 import {
-  findUserById,
-
   findTeamById,
   findPlayerById,
 } from "@/utils/prismaHelpersutils";
 import { inviteInclude } from "../utils/includesInvites";
+import {checkPendingInvite} from "./checkPendingInvite"
 
 
 interface ICreateInviteRequest {
@@ -37,6 +36,7 @@ export async function createInvite({ data, userId }: ICreateInviteRequest) {
   if (!player.captainOf || player.captainOf.id !== data.teamId) { // capitao do time / e não so capitao  
     throw new AppError("Apenas o capitão deste time pode criar convites", 403);
   }
+  await checkPendingInvite(playerReceiverId.id, data.teamId);
 
   const invitecreate = await prisma.invite.create({
     data: { senderId: player.id, ...data },

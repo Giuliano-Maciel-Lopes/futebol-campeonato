@@ -5,6 +5,13 @@ export const playerInclude = {
     select: {
       photoUrl: true,
       name: true,
+      captain: {
+        select: {
+          id: true,
+          userId: true,
+          nameCart: true,
+        },
+      },
     },
   },
 } as Prisma.PlayerInclude;

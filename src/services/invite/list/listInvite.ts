@@ -1,5 +1,6 @@
 import { prisma } from "@/database/prisma-config";
 import { findPlayerByUserId } from "@/utils/prismaHelpersutils";
+import { inviteInclude } from "../utils/includesInvites";
 
 type listProps = {
   userId: string;
@@ -12,27 +13,7 @@ export async function listInvite({ userId }: listProps) {
     where: {
       OR: [{ receiverId: player.id }, { senderId: player.id }],
     },
-    include: {
-      team: {
-        select: {
-          name: true,
-        },
-      },
-      receiver: {
-        select: {
-          user: {
-            select: { id: true },
-          },
-        },
-      },
-      sender: {
-        select: {
-          user: {
-            select: { id: true },
-          },
-        },
-      },
-    },
+    include: inviteInclude,
   });
 
   return { invite };
