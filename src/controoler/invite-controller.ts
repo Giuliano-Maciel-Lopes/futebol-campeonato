@@ -3,7 +3,6 @@ import {
   createInvite,
   deleteInvite,
   listInvite,
-  showInvite,
   updateInvite,
 } from "@/services/invite";
 import { InviteBodySchema } from "@/schemazod/invite/create";

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { uuidSchema } from "@/schemazod/uuid";
 import { MatchBodySchema } from "@/schemazod/match/create";
 import { MatchBodySchemaupdateStatus } from "@/schemazod/match/updatStatus";
-import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
+import { ParamsSchemaMatch } from "@/schemazod/match/params";
 import {
   createMatch,
   showMatchId,
@@ -21,7 +21,10 @@ class MatchController {
   }
 
   async list(req: Request, res: Response) {
-    const { dataMatch } = await listMatch();
+
+    const params = ParamsSchemaMatch.parse(req.query)
+    
+    const { dataMatch } = await listMatch({params});
     res.json(dataMatch);
   }
 

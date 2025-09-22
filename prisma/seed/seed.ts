@@ -1,93 +1,52 @@
-import { PrismaClient, Position, PlayerRole } from "@prisma/client";
-
-const prisma = new PrismaClient();
-
-function getRandomInt(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function getRandomName() {
-  const names = ["Lucas", "Gabriel", "João", "Matheus", "Pedro", "Rafael", "Felipe", "Vinicius", "Gustavo", "Bruno"];
-  const surnames = ["Silva", "Souza", "Oliveira", "Costa", "Pereira", "Alves", "Rodrigues", "Martins"];
-  return `${names[getRandomInt(0, names.length - 1)]} ${surnames[getRandomInt(0, surnames.length - 1)]}`;
-}
-
-function getRandomPhotoUrl() {
-  return `https://i.pravatar.cc/150?img=${getRandomInt(1, 70)}`;
-}
+// prisma/seedMatches.ts
+import { prisma } from "@/database/prisma-config";
 
 async function main() {
-  const positions: Position[] = ["GOLEIRO", "DEFENSOR", "MEIOCAMPO", "ATACANTE"];
+  const teamIds = [
+    "c3eeea25-8b86-4301-922e-578fd098b13e", // EQUIPE X
+    "fe401987-ea43-482e-b450-294e0303cf20", // Time Exemplo 3
+    "1e4bf67e-0269-40f6-82a6-62d0aca9bd48", // Time Exemplo 4
+    "10144ec2-d951-4afa-a67c-9d11b6bba497", // penaldo
+  ];
 
-  // 1️⃣ Criar 100 usuários
-  const usersData = Array.from({ length: 100 }).map(() => ({
-    email: `user${getRandomInt(1000, 9999)}@teste.com`,
-    name: getRandomName(),
-    password: "123456",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }));
+  const stages = ["GROUP", "SEMI", "FINAL"] as const;
+const statuses = ["SCHEDULED", "ONGOING", "FINISHED"] as const;
 
-  await prisma.user.createMany({ data: usersData, skipDuplicates: true });
-  let allUsers = await prisma.user.findMany();
 
-  // 2️⃣ Criar 5 times com capitão depois
-  const teams = [];
-  for (let i = 0; i < 5; i++) {
-    // Pega 14 usuários para o time
-    const teamUsers = allUsers.splice(0, 14);
+  for (let i = 0; i < 100; i++) {
+    // escolher times aleatórios diferentes
+    let team1Index = Math.floor(Math.random() * teamIds.length);
+    let team2Index;
+    do {
+      team2Index = Math.floor(Math.random() * teamIds.length);
+    } while (team2Index === team1Index);
 
-    // Primeiro jogador será o capitão
-    const captainUser = teamUsers[0];
+    // gerar data aleatória entre hoje e 100 dias
+    const date = new Date();
+    date.setDate(date.getDate() + Math.floor(Math.random() * 100));
 
-    // Cria jogador capitão
-    const captainPlayer = await prisma.player.create({
+    // gerar scores aleatórios
+    const team1Score = Math.floor(Math.random() * 5);
+    const team2Score = Math.floor(Math.random() * 5);
+
+    // gerar estágio e status aleatórios
+    const stage = stages[Math.floor(Math.random() * stages.length)];
+    const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+    await prisma.match.create({
       data: {
-        nameCart: `Player ${captainUser.name}`,
-        position: positions[getRandomInt(0, positions.length - 1)],
-        number: getRandomInt(1, 99),
-        photoUrl: getRandomPhotoUrl(),
-        goals: getRandomInt(0, 50),
-        assists: getRandomInt(0, 50),
-        isActive: true,
-        userId: captainUser.id,
-        role: PlayerRole.CAPITAO,
-        positionIndex: 0,
+        team1Id: teamIds[team1Index],
+        team2Id: teamIds[team2Index],
+        date,
+        team1Score,
+        team2Score,
+        stage,
+        status,
       },
     });
-
-    // Cria o time com o ID do capitão
-    const team = await prisma.team.create({
-      data: {
-        name: `Time ${i + 1}`,
-        isActive: true,
-        captainId: captainPlayer.id,
-      },
-    });
-
-    // Cria os outros jogadores do time
-    const otherPlayersData = teamUsers.slice(1).map((user, idx) => ({
-      nameCart: `Player ${user.name}`,
-      position: positions[getRandomInt(0, positions.length - 1)],
-      number: getRandomInt(1, 99),
-      photoUrl: getRandomPhotoUrl(),
-      goals: getRandomInt(0, 50),
-      assists: getRandomInt(0, 50),
-      isActive: true,
-      userId: user.id,
-      role: PlayerRole.PLAYER,
-      teamId: team.id,
-      positionIndex: idx + 1 < 7 ? idx + 1 : null, // 0-6 titulares, resto reservas
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }));
-
-    await prisma.player.createMany({ data: otherPlayersData, skipDuplicates: true });
-
-    teams.push(team);
   }
 
-  console.log("✅ 5 times com 14 jogadores criados com capitão definido!");
+  console.log("✅ 100 partidas criadas com sucesso!");
 }
 
 main()
