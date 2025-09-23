@@ -19,5 +19,22 @@ class SessionController {
 
     res.json({datauser ,});
   }
+   async destroy(req: Request, res: Response) {
+ 
+    res.cookie("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      expires: new Date(0), // expira imediatamente
+      path: "/",
+      ...(process.env.NODE_ENV === "production" && { domain: ".meusite.com" }),
+    });
+
+    // Você pode também invalidar sessão no banco se precisar
+    // await sessionInvalidate(req.userId);
+
+    res.status(200).json({ message: "Logout realizado com sucesso" });
+  }
 }
+
 export { SessionController };
