@@ -17,5 +17,6 @@ matchRoutes.use(verifyUserAuthorization(["ADMIN"]));
 matchRoutes.post("/", matchController.create);
 matchRoutes.delete("/:id", matchController.delete);
 matchRoutes.patch("/:id", matchController.updateStatus);
+matchRoutes.patch("/isactive/:id", matchController.isActiveUpdate);
 
 export { matchRoutes };

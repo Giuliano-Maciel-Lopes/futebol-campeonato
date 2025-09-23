@@ -96,7 +96,7 @@ model Match {
 
   stage Stage // Fase do campeonato: GROUP, , SEMI, FINAL
   round Int   @default(autoincrement())
-
+ isActive  Boolean  @default(true)
   team1Id String @db.Uuid
   team2Id String @db.Uuid
   team1   Team   @relation("Team1Matches", fields: [team1Id], references: [id])

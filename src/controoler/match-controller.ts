@@ -9,7 +9,9 @@ import {
   listMatch,
   deleteMatch,
   updateStatus,
+  updateIsactiveMacth
 } from "@/services/match";
+import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
 
 class MatchController {
   async create(req: Request, res: Response) {
@@ -21,10 +23,10 @@ class MatchController {
   }
 
   async list(req: Request, res: Response) {
-
+    const  role = req.user?.role
     const params = ParamsSchemaMatch.parse(req.query)
     
-    const { dataMatch } = await listMatch({params});
+    const { dataMatch } = await listMatch({params , role});
     res.json(dataMatch);
   }
 
@@ -49,8 +51,14 @@ class MatchController {
     res.json(statusmatch);
   }
 
-  // futuramente c o projeto crescer e criar + campeonatos coloco isActive COM PATCH
-  // para ficar aparecendo ou n mas por enquanto nao precisa
+   async isActiveUpdate(req: Request, res: Response) {
+     const id = uuidSchema.parse(req.params.id);
+     const { isActive } = schemazBOdyIsactiveUpdate.parse(req.body);
+ 
+     const {match } = await updateIsactiveMacth({ id, isActive });
+ 
+     res.json(match);
+   }
 }
 
 export { MatchController };
