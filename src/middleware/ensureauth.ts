@@ -32,7 +32,7 @@ function ensureAuth(req: Request, res: Response, next: NextFunction) {
     console.log("Role do usuário em ensureAuth:", req.user.role);
     next();
   } catch (error) {
-    throw new AppError("TOKEN INVÁLIDO!!", 401);
+    throw new AppError("Sessão expirada ou inválida. Faça login para continuar.", 401);
   }
 }
 
