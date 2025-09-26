@@ -14,6 +14,7 @@ import { uuidSchema } from "@/schemazod/uuid";
 import { TeamUpdateSchema } from "@/schemazod/team/update";
 import { schemazBOdyIsactiveUpdate } from "@/schemazod/updateISactive";
 import { TeamFormationSchema } from "@/schemazod/team/updatePositionindex";
+import { ParamsTeamSchema } from "@/schemazod/team/params";
 
 class TeamController {
   async create(req: Request, res: Response) {
@@ -27,8 +28,9 @@ class TeamController {
 
   async list(req: Request, res: Response) {
     const role = req.user?.role;
+    const params = ParamsTeamSchema.parse(req.query)
 
-    const { fullTeam } = await listTeam({ role });
+    const { fullTeam } = await listTeam({ role , params });
     res.status(200).json(fullTeam);
   }
   async showID(req: Request, res: Response) {

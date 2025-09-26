@@ -2,12 +2,11 @@ import { sessionCreate } from "@/services/session";
 import { Request, Response } from "express";
 import { createSessionSchema } from "@/schemazod/session/creat";
 
-
 class SessionController {
   async create(req: Request, res: Response) {
     const data = createSessionSchema.parse(req.body);
     const { token, datauser } = await sessionCreate({ data });
-  
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // só HTTPS em produção
@@ -17,10 +16,9 @@ class SessionController {
       ...(process.env.NODE_ENV === "production" && { domain: ".meusite.com" }), // só em produção
     });
 
-    res.json({datauser ,});
+    res.json({ datauser });
   }
-   async destroy(req: Request, res: Response) {
- 
+  async destroy(req: Request, res: Response) {
     res.cookie("token", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

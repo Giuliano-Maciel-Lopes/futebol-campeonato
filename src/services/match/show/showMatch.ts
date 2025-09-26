@@ -1,6 +1,7 @@
 import { prisma } from "@/database/prisma-config";
 import { findMatchById } from "@/utils/prismaHelpersutils";
-import { matchInclude } from "../utils/listincludesget";
+import { matchIncludeShow } from "../utils/showIncludesget";
+
 
 export async function showMatchId(id: string) {
   // Primeiro verifica se existe
@@ -8,19 +9,7 @@ export async function showMatchId(id: string) {
 
   const MatchId = await prisma.match.findUnique({
     where: { id },
-    include: {
-      ...matchInclude, // inclui os times
-      events: {
-        select: {
-          type: true,
-          player: {
-            select: {
-              nameCart: true,
-            },
-          },
-        },
-      },
-    },
+     include: matchIncludeShow,
   });
 
   return { MatchId };

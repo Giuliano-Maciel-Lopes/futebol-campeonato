@@ -6,12 +6,14 @@ export const matchInclude: Prisma.MatchInclude = {
     select: {
       name: true,
       photoUrl: true,
+      id:true
     },
   },
   team2: {
     select: {
       name: true,
       photoUrl: true,
+       id:true
     },
   },
 };
