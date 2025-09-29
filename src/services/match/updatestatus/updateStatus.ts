@@ -1,6 +1,7 @@
 import { prisma } from "@/database/prisma-config";
 import { MatchBodyUpdateStatusInput } from "@/schemazod/match/updatStatus";
 import { updateGroupsScores } from "@/services/groupScore";
+import { rollbackGroupsScores } from "@/services/groupScore/update/rollbackGroupsScores";
 import { AppError } from "@/utils/AppEroor";
 import { findMatchById } from "@/utils/prismaHelpersutils";
 
@@ -20,6 +21,9 @@ export async function updateStatus({ data, id }: updateStatusProps) {
       );
     }
   }
+ if(match.status === "FINISHED" && data.status !=="FINISHED"){
+  await rollbackGroupsScores({match})
+ }
 
  if(data.status === "FINISHED"){
    await updateGroupsScores({match})
