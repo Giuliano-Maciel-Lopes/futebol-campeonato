@@ -2,6 +2,8 @@ import { prisma } from "@/database/prisma-config";
 import { TeamBodySchemaInput } from "@/schemazod/team/create";
 import { AppError } from "@/utils/AppEroor";
 import { findPlayerById } from "@/utils/prismaHelpersutils";
+import { PopulateGropScore } from "../utils/populateGroupScore";
+
 
 // so adm pode criar time ta no middlawqare
 interface CreateTeamRequest {
@@ -17,6 +19,10 @@ export async function createTeam({ data }: CreateTeamRequest) {
 
 
   const TeamCreate = await prisma.team.create({ data });
+
+   if(data.groupId){
+  await PopulateGropScore({groupId:data.groupId , team:TeamCreate})
+ }
 
   await prisma.player.update({
     where: { id: data.captainId },
