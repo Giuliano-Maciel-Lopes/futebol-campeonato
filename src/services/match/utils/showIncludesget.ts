@@ -31,6 +31,8 @@ export const matchIncludeShow: Prisma.MatchInclude = {
   events: {
     select: {
       type: true,
+      id:true, 
+      matchId:true,
       player: {
         select: {
           id: true,

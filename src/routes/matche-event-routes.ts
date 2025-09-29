@@ -9,5 +9,6 @@ const matcheEventController = new MatcheEventController();
 matchEventRoutes.use(verifyUserAuthorization(["ADMIN"]));
 
 matchEventRoutes.post("/", matcheEventController.create);
+matchEventRoutes.delete("/:id", matcheEventController.delete);
 
 export { matchEventRoutes };

@@ -1,5 +1,5 @@
 export * from './createMatcheEvent';
-export * from "./updatematch"
+export * from "../utils/updatematch"
 
 
 

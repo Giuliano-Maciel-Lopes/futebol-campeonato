@@ -46,6 +46,23 @@ export async function findMatchById(id: string) {
   return { match };
 }
 
+export async function findMatchEventById(id: string) {
+  const matchEvent = await prisma.matchEvent.findUnique({
+    where: { id },
+    include: {
+      match: true,
+      player: true,
+      team: true,
+    },
+  });
+
+  if (!matchEvent) {
+    throw new AppError("Match event não encontrado.", 404);
+  }
+
+  return { matchEvent };
+}
+
 export async function findPlayerByUserId(userId: string) {
   const player = await prisma.player.findUnique({
     where: { userId },
