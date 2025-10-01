@@ -6,5 +6,6 @@ export * from "./update";
 export * from "./delete";
 export * from "./updateISactive";
 export * from "./updatePositionIndex";
+export * from "./updateTeamidPlayers";
 
 

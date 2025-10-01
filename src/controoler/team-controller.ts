@@ -8,6 +8,7 @@ import {
   IsactiveTeamUpdate,
   UpdatePositionIndexTeam,
   showTeamUserID,
+  updateByTeamIdPlayers,
 } from "@/services/team";
 import { TeamBodySchema } from "@/schemazod/team/create";
 import { uuidSchema } from "@/schemazod/uuid";
@@ -28,9 +29,9 @@ class TeamController {
 
   async list(req: Request, res: Response) {
     const role = req.user?.role;
-    const params = ParamsTeamSchema.parse(req.query)
+    const params = ParamsTeamSchema.parse(req.query);
 
-    const { fullTeam } = await listTeam({ role , params });
+    const { fullTeam } = await listTeam({ role, params });
     res.status(200).json(fullTeam);
   }
   async showID(req: Request, res: Response) {
@@ -81,6 +82,14 @@ class TeamController {
     await UpdatePositionIndexTeam({ id, userId, data });
 
     res.status(200).json("Alteraçoes feitas com sucesso");
+  }
+  async UpdatePlayersTeamId(req: Request, res: Response) {
+    const userId = req.user!.id;
+    const playerId = uuidSchema.parse(req.params.playerId);
+
+    const {removedPlayer} =await updateByTeamIdPlayers({ userId, playerId });
+
+    res.status(200).json(removedPlayer);
   }
 }
 

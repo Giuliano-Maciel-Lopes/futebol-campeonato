@@ -8,6 +8,7 @@ import {
   deletePlayer,
   IsactivePlayerUpdate,
   showbyuserIdPlayer,
+  updatePlayerByTeamId
 } from "@/services/player";
 import { uuidSchema } from "@/schemazod/uuid";
 import { PlayerBodySchemaupdate } from "@/schemazod/player/update";
@@ -81,7 +82,12 @@ class PlayerController {
 
     res.status(200).json(playerLog);
   }
- 
+  async UpdateByTeamId(req: Request, res: Response) {
+   const userId = req.user!.id
+    const {  updaedeTeamId } = await updatePlayerByTeamId({ userId });
+    res.status(200).json( updaedeTeamId);
+  }
+
 }
 
 export { PlayerController };

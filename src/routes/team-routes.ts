@@ -18,6 +18,7 @@ teamRoutes.patch("/:id", teamController.update);
 teamRoutes.delete("/:id", verifyUserAuthorization(["ADMIN"]) ,  teamController.delete);
 teamRoutes.patch("/isActive/:id", verifyUserAuthorization(["ADMIN"]) ,  teamController.isActiveUpdate);
 teamRoutes.patch("/position/:id",  teamController.PositionIndexeUpdate);
+teamRoutes.patch("/player/:playerId",   teamController.UpdatePlayersTeamId);
 
 
 export { teamRoutes };

@@ -16,10 +16,14 @@ playerRoutes.get("/", optionalAuth ,  playerController.list);
 
 playerRoutes.use(ensureAuth);
 
+playerRoutes.patch("/teamid" ,  playerController.UpdateByTeamId);
 playerRoutes.post("/",  playerController.create);
 playerRoutes.patch("/:id",  playerController.update);
 playerRoutes.delete("/:id", verifyUserAuthorization(["ADMIN"]) ,  playerController.delete);
 playerRoutes.patch("/isActive/:id", verifyUserAuthorization(["ADMIN"]) ,  playerController.isActiveUpdate);
+
+
+
 
 
 
