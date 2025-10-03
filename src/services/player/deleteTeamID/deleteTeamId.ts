@@ -1,4 +1,5 @@
 import { prisma } from "@/database/prisma-config";
+import { AppError } from "@/utils/AppEroor";
 import { findPlayerByUserId } from "@/utils/prismaHelpersutils";
 
 type DeletePlayerByTeamIdRequest = {
@@ -11,7 +12,7 @@ export async function updatePlayerByTeamId({
   const { player } = await findPlayerByUserId(userId);
 
   if (player.captainOf) {
-    throw new Error(
+    throw new AppError(
       "O capitão não pode sair do time sem transferir a faixa ! Entre em contato com uma ADM"
     );
   }

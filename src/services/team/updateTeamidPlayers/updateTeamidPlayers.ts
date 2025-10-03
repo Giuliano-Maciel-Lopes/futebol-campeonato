@@ -15,6 +15,10 @@ export async function updateByTeamIdPlayers({ playerId, userId }: Props) {
   const { player: playerToRemove } = await findPlayerById(playerId);
   const { player: captain } = await findPlayerByUserId(userId);
 
+  if(playerToRemove.id === captain.id){
+     throw new AppError("o capitao do time n pode expulsar ele ms ");
+  }
+
   if (!captain.captainOf || captain.captainOf.id !== playerToRemove.teamId) {
     throw new AppError("Só o capitão do time pode expulsar um jogador do time");
   }

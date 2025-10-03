@@ -85,7 +85,7 @@ class PlayerController {
   async UpdateByTeamId(req: Request, res: Response) {
    const userId = req.user!.id
     const {  updaedeTeamId } = await updatePlayerByTeamId({ userId });
-    res.status(200).json( updaedeTeamId);
+    res.status(200).json(updaedeTeamId);
   }
 
 }

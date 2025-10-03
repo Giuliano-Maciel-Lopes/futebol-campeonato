@@ -1,36 +1,44 @@
-import { prisma } from "@/database/prisma-config";
+import { PrismaClient, Position, PlayerRole } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 async function main() {
-  console.log(" Limpando tabelas...");
+  for (let i = 1; i <= 50; i++) {
+    const positionValues = Object.values(Position);
+    const randomPosition =
+      positionValues[Math.floor(Math.random() * positionValues.length)];
 
-  // 1. limpa as tabelas que PODEM ser apagadas
-  await prisma.matchEvent.deleteMany();
-  await prisma.match.deleteMany();
-  await prisma.group.deleteMany();
+    // Cria usuário
+    const user = await prisma.user.create({
+      data: {
+        name: `User ${i}`,
+        email: `user${i}@example.com`,
+        password: "123456", // senha padrão
+        role: "PLAYER",
+      },
+    });
 
-  console.log(" Tabelas limpas!");
+    // Cria Player associado ao User criado
+    await prisma.player.create({
+      data: {
+        nameCart: i.toString(),
+        position: randomPosition,
+        number: i,
+        role: PlayerRole.PLAYER,
+        isActive: true,
+        photoUrl: null,
+        goals: 0,
+        assists: 0,
+        userId: user.id, // associa ao user criado
+      },
+    });
+  }
 
-  // 2. recria os grupos A, B, C, D
-  console.log(" Criando grupos iniciais...");
-
-  const groups = await prisma.group.createMany({
-    data: [
-      { name: "A" },
-      { name: "B" },
-      { name: "C" },
-      { name: "D" },
-    ],
-    skipDuplicates: true, // evita erro se já existirem
-  });
-
-  console.log(`✅ ${groups.count} grupos criados (A, B, C, D)!`);
+  console.log("Seed de 50 jogadores com usuários criada!");
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
+  .catch((e) => console.error(e))
   .finally(async () => {
     await prisma.$disconnect();
   });
