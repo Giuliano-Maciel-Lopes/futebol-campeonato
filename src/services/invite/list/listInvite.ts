@@ -13,7 +13,7 @@ export async function listInvite({ userId, status }: listProps) {
 
   const invite = await prisma.invite.findMany({
     where: {
-      OR: [{ receiverId: player.id }, { senderId: player.id }],
+      OR: [{ receiverId: player.id ,  status:"PENDING" }, { senderId: player.id }],
       ...(status && { status }),
     },
 
